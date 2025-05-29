@@ -64,7 +64,7 @@ const Chatbox = () => {
                 type="text"
                 value={input} //keeps input synced with state
                 onChange={(e) => { setInput(e.target.value)} } //updates state when you 
-                className="flex-1 border rounded px-3 py-2 " placeholder="Ask me anything :)"
+                className="flex-1 border rounded px-3 py-2 text-black " placeholder="Ask me anything :)"
             />
             <button type="submit" className="bg-blue-500 text-white px-4 rounded"> Enter </button> 
         </form> 
