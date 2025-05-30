@@ -17,7 +17,7 @@ const Chatbox = () => {
         setInput('') //clears input box
         
         try {
-            const res = await fetch("http://127.0.0.1:8000/chat", {
+            const res = await fetch("/api/ai", {
                 method: "POST",
                 headers: { //tell server format data sending
                     "Content-Type": "application/json" //means ur sending json object
@@ -26,7 +26,7 @@ const Chatbox = () => {
             });
 
             const data =  await res.json(); //reads data from server and parse into javascript objeect
-            const aiMessage = data.reply;
+            const aiMessage = data.response;
 
             setMessages((prev) => [...prev, { role: 'ai', content: aiMessage}])
 

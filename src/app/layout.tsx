@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className="relative min-h-screen overflow-hidden text-white">
         <Navbar/>
         <Starfield/>
-        { children }
+        { children } 
       </body>
     </html>
   );
