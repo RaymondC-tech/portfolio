@@ -5,7 +5,7 @@ function cosineSimilarit(a: number[], b: number[]){
     return dot / (normA * normB)
 }
 
-export function getTopK(queryVec: number[], embeddedChunks: { text: string, vector: number[] }[], k = 2) {
+export function getTopK(queryVec: number[], embeddedChunks: { text: string, vector: number[] }[], k = 3) {
     return embeddedChunks.map(chunk => ({ //new array with { text, score}
         text: chunk.text,
         score: cosineSimilarit(queryVec, chunk.vector),

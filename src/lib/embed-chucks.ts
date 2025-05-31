@@ -1,4 +1,4 @@
-import userBioChunks from './userBio'
+import userBioChunks from './updatedUserBio'
 import { embed } from './embed'
 
 //describes an array of objects where each object must have a text property of type string and vector property which is an array of numbers

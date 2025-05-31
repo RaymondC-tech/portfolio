@@ -27,7 +27,7 @@ export async function POST(request: Request) { //post handler for route
         const embeddedChunks = await getEmbeddedChunks();
         
         //3. Find top relavent chunks
-        const topChunks = getTopK(queryEmbedding, embeddedChunks, 2)
+        const topChunks = getTopK(queryEmbedding, embeddedChunks, 3)
 
         //format final prompt
         const formattedPrompt = `${clarification}. 

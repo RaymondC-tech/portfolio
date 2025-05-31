@@ -1,4 +1,4 @@
-import {Chatbox, Button} from '@/components'
+import {Chatbox, Button, TypingIntro} from '@/components'
 
 export default function HomePage() {
   return (
@@ -6,6 +6,7 @@ export default function HomePage() {
       <h1 className="text-4xl font-bold">
         Welcome to my Portfolio
       </h1>
+      <TypingIntro/>
       <Chatbox/>
       <Button/>
     </main>
