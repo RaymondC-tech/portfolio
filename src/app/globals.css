@@ -12,3 +12,7 @@
     animation: blink 1s step-end infinite;
 
 }
+
+.animate-flash {
+    animation: blink 1.5s infinite;
+}

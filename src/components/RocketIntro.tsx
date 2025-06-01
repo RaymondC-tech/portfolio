@@ -12,9 +12,14 @@ export default function RocketIntro({ onComplete }: { onComplete: () => void }){
     //onComplete: () => void   type annotation that tells the shape of prop
     const [launched, setLaunched] = useState(false)
     const [showContent, setShowContent] = useState(true) //for AnimatePresence to unmount
+    const [showButton, setShowButton] = useState(true)
+    const [smokePuffs, setSmokePuffs] =  useState<{ id: number }[]>([]);
+    const [nextId, setNextId] = useState(0);
+    
 
     const handleLaunch = () => {
         setLaunched(true);
+        setShowButton(false);
         setTimeout(() => {
             setShowContent(false) //trigger AnimationPresence exit
         }, 2000); // Reduced to 2 seconds to match animation duration
@@ -31,34 +36,72 @@ export default function RocketIntro({ onComplete }: { onComplete: () => void }){
                 <Starfield/>
                 {/* Rocket Container */}
                 <div className="absolute bottom-20 w-full h-[200px] flex justify-center">
+                    {launched && (
+                            <>
+                                {[...Array(10)].map((_, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{
+                                    opacity: 0.8,
+                                    scale: 0.9,
+                                    y: 0,
+                                    x: (Math.random() - 0.5) * 300 // spread left/right randomly
+                                    }}
+                                    animate={{
+                                    opacity: 0,
+                                    scale: 3,
+                                    y: -100,
+                                    }}
+                                    transition={{
+                                    duration: 2,
+                                    delay: i * 0.1, // staggered delay
+                                    ease: "easeOut",
+                                    }}
+                                    className="absolute bottom-0 left-1/2 w-40 h-24 bg-gray-400/80 rounded-full blur-xl -translate-x-1/2 z-10"
+                                />
+                                ))}
+                            </>
+                        )}
+
                     <motion.div
                         initial={{ y: 0 }}
                         animate={launched ? { y: '-120vh' } : { y: 0 }}
                         transition={{ duration: 2, ease: "easeInOut" }}
-                        className="relative z-20 border border-red-500"
+                        className="relative z-20"
                     > 
+
                         <Image 
                             src="/rocketImg.png" 
                             alt="rocket" 
                             width={100} 
                             height={100}
-                            priority
                         />
                     </motion.div>
                 </div>
 
                 {/* Ground */}
-                <div className="absolute bottom-0 w-full h-1 bg-white"/>
-
-                {/* Launch Button */}
-                <motion.button
-                    onClick={handleLaunch}
-                    className="absolute bottom-20 bg-red-600 text-white px-6 py-3 rounded-full z-30"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                >
-                    Launch to Raymond's portfolio
+                <div className="absolute translate-y-75 w-full flex justify-center mb--100 translate-x-15">
+                    <Image
+                        src="/ground.png"
+                        alt="ground"
+                        width={1000}
+                        height={1}
+                    />
+                </div>
+                <div className="absolute bottom-0 w-full h-1 bg-white z-30"/>
+                <>
+                {showButton && (        
+                    <motion.button
+                        onClick={handleLaunch}
+                        className="absolute bottom-200 h-45 w-45 animate-flash rounded-full bg-red-600 text-white text-3xl 
+                        font-bold flex items-center justify-center shadow-[0_0_30px_rgba(255,0,0,0.7)] hover:shadow-[0_0_50px_rgba(255,0,0,1)] transition-shadow duration-300 z-30"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        Launch 
                 </motion.button>
+                )}
+                </>
             </motion.div>
          )}
         </AnimatePresence>
