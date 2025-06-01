@@ -11,50 +11,39 @@ export default function RocketIntro({ onComplete }: { onComplete: () => void }){
     //RocketIntro component expects single prop called onComplete and must be a function that takes no arguements and returns nothing
     //onComplete: () => void   type annotation that tells the shape of prop
     const [launched, setLaunched] = useState(false)
-    const [imageError, setImageError] = useState(false)
+    const [showContent, setShowContent] = useState(true) //for AnimatePresence to unmount
 
     const handleLaunch = () => {
         setLaunched(true);
         setTimeout(() => {
-            onComplete(); //notify parent intro id done
+            setShowContent(false) //trigger AnimationPresence exit
         }, 2000); // Reduced to 2 seconds to match animation duration
     }
 
     return (
-        <AnimatePresence mode="wait">
-         {!launched && (
+        <AnimatePresence mode="wait" onExitComplete={onComplete}>
+         {showContent && (
             <motion.div
                 key="rocket-intro"
-                className="fixed inset-0 w-full h-screen bg-black overflow-hidden flex flex-col justify-end items-center"
+                className="fixed inset-0 w-full h-screen overflow-hidden flex flex-col justify-end items-center z-50"
                 exit={{ opacity: 0 }}
             >
                 <Starfield/>
                 {/* Rocket Container */}
                 <div className="absolute bottom-20 w-full h-[200px] flex justify-center">
                     <motion.div
-                        initial={{ y: '100%' }}
-                        animate={launched ? { y: '-200%' } : { y: '100%' }}
-                        transition={{ 
-                            duration: 2,
-                            ease: "easeInOut"
-                        }}
-                        className="relative z-20"
-                    >
-                        {imageError ? (
-                            <div className="w-[100px] h-[100px] bg-red-500 flex items-center justify-center text-white">
-                                Rocket Image
-                            </div>
-                        ) : (
-                            <Image 
-                                src="/rocketImg.png" 
-                                alt="rocket" 
-                                width={100} 
-                                height={100}
-                                className="transform -translate-y-1/2"
-                                onError={() => setImageError(true)}
-                                priority
-                            />
-                        )}
+                        initial={{ y: 0 }}
+                        animate={launched ? { y: '-120vh' } : { y: 0 }}
+                        transition={{ duration: 2, ease: "easeInOut" }}
+                        className="relative z-20 border border-red-500"
+                    > 
+                        <Image 
+                            src="/rocketImg.png" 
+                            alt="rocket" 
+                            width={100} 
+                            height={100}
+                            priority
+                        />
                     </motion.div>
                 </div>
 

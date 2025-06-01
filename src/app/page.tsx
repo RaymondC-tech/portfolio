@@ -1,7 +1,7 @@
 'use client'
 
 import {useState} from 'react';
-import {Chatbox, Button, TypingIntro, Navbar, Starfield} from '@/components'
+import {Chatbox, Button, TypingIntro, Navbar} from '@/components'
 import RocketIntro from '@/components/RocketIntro'
 
 export default function HomePage() {
@@ -14,7 +14,6 @@ export default function HomePage() {
       ) : (
         <>
           <Navbar />
-          <Starfield />
           <div className="relative z-10">
             <TypingIntro/>
             <Chatbox/>

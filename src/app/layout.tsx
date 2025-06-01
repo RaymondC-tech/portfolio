@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import {Starfield} from '@/components'
 
 export const metadata: Metadata = {
   title: "Raymond Chan portfolio",
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="relative min-h-screen overflow-hidden text-white">
+        <Starfield/>
         {children}
       </body>
     </html>
