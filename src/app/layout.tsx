@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Navbar, Starfield} from '@/components';
-
 
 export const metadata: Metadata = {
   title: "Raymond Chan portfolio",
@@ -13,13 +11,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body className="relative min-h-screen overflow-hidden text-white">
-        <Navbar/>
-        <Starfield/>
-        { children } 
+        {children}
       </body>
     </html>
   );

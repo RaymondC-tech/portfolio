@@ -4,7 +4,7 @@
 import React, { useEffect, useState} from 'react';
 import { IoMdMail } from "react-icons/io";
 const lines = [
-    "Welcome, I'm Raymond",
+    "Welcome I\'m Raymond",
     "I like to build stuff occasionally",
     "I'm a Computer Science student at the University of Toronto, passionate about full-stack development and machine learning. I love building tools that automate my life and make everyday tasks easier."
 ];
@@ -20,26 +20,27 @@ const TypingIntro = () => {
     useEffect(() => {
         if (lineIndex >= lines.length) {
             setShowButton(true);
-            return
-        } 
+            return;
+        }
 
-        if (charIndex < lines[lineIndex].length){
-            const timeout = setTimeout(() => {
+        let timeout: NodeJS.Timeout;
+        if (charIndex < lines[lineIndex].length) {
+            timeout = setTimeout(() => {
+                const currentChar = lines[lineIndex][charIndex];
                 setTypedLines(prev => {
                     const updated = [...prev];
-                    updated[lineIndex] += lines[lineIndex][charIndex];
+                    updated[lineIndex] += currentChar;
                     return updated;
                 });
                 setCharIndex(prev => prev + 1);
-        }, 50);
+            }, 50);
         } else {
-            //finished line, wait to move onto next
-            const delay = setTimeout(() => {
+            timeout = setTimeout(() => {
                 setLineIndex(prev => prev + 1);
                 setCharIndex(0);
             }, 600);
-            return () => clearTimeout(delay);
         }
+        return () => clearTimeout(timeout);
     }, [charIndex, lineIndex]);
 
     return (
