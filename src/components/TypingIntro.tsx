@@ -50,7 +50,7 @@ const TypingIntro = () => {
             <p className="max-w-xl mx-auto text-gray-300">{typedLines[2]}{(lineIndex === 2 || lineIndex === 3) && <Cursor />}</p>
             <div className={`flex justify-center transition-opacity duration-1000 ${showButton ? 'opacity-100': 'opacity-0'}`}>
                 <a href="mailto:raymondch49@gmail.com" className="flex items-center">
-                    <button className="flex items-center gap-2 px-4 py-2 border-white border-4 rounded">
+                    <button className="flex items-center gap-2 px-4 py-2 border-white border-4 rounded hover:bg-gray-700">
                         <IoMdMail/>
                         Lets connect!
                     </button>

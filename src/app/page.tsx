@@ -5,22 +5,32 @@ import {Chatbox, Button, TypingIntro, Navbar} from '@/components'
 import RocketIntro from '@/components/RocketIntro'
 
 export default function HomePage() {
-  const [showMainContent, setShowMainContent] = useState(false);
+  // const [showMainContent, setShowMainContent] = useState(false);
 
   return (
     <main className="relative min-h-screen">
-      {!showMainContent ? (
-        <RocketIntro onComplete={() => setShowMainContent(true)} />
-      ) : (
-        <>
-          <Navbar />
-          <div className="relative z-10">
-            <TypingIntro/>
-            <Chatbox/>
-            <Button/>
-          </div>
-        </>
-      )}
+      {/* 
+              {!showMainContent ? (
+                <RocketIntro onComplete={() => setShowMainContent(true)} />
+              ) : (
+                <>
+                  <Navbar />
+                  <div className="relative z-10">
+                    <TypingIntro/>
+                    <Chatbox/>
+                    <Button/>
+                  </div>
+                </>
+              )}
+      */}
+      <>
+        <Navbar />
+        <div className="relative z-10">
+          <TypingIntro/>
+          <Chatbox/>
+          <Button/>
+        </div>
+      </>
     </main>
   )
 };

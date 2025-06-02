@@ -13,8 +13,7 @@ export default function RocketIntro({ onComplete }: { onComplete: () => void }){
     const [launched, setLaunched] = useState(false)
     const [showContent, setShowContent] = useState(true) //for AnimatePresence to unmount
     const [showButton, setShowButton] = useState(true)
-    const [smokePuffs, setSmokePuffs] =  useState<{ id: number }[]>([]);
-    const [nextId, setNextId] = useState(0);
+ 
     
 
     const handleLaunch = () => {
@@ -80,28 +79,30 @@ export default function RocketIntro({ onComplete }: { onComplete: () => void }){
                 </div>
 
                 {/* Ground */}
-                <div className="absolute translate-y-75 w-full flex justify-center mb--100 translate-x-15">
-                    <Image
-                        src="/ground.png"
-                        alt="ground"
-                        width={1000}
-                        height={1}
-                    />
+                <div className="absolute translate-y-70 flex justify-center translate-x-15">
+                    <div className="w-[1000px]">
+                        <Image
+                            src="/ground.png"
+                            alt="ground"
+                            width={1000}
+                            height={1}
+                        />
+                    </div>
                 </div>
                 <div className="absolute bottom-0 w-full h-1 bg-white z-30"/>
-                <>
-                {showButton && (        
-                    <motion.button
-                        onClick={handleLaunch}
-                        className="absolute bottom-200 h-45 w-45 animate-flash rounded-full bg-red-600 text-white text-3xl 
-                        font-bold flex items-center justify-center shadow-[0_0_30px_rgba(255,0,0,0.7)] hover:shadow-[0_0_50px_rgba(255,0,0,1)] transition-shadow duration-300 z-30"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        Launch 
-                </motion.button>
-                )}
-                </>
+                    <>
+                    {showButton && (        
+                        <motion.button
+                            onClick={handleLaunch}
+                            className="absolute bottom-200 h-45 w-45 animate-flash rounded-full bg-red-600 text-white text-3xl 
+                            font-bold flex items-center justify-center shadow-[0_0_30px_rgba(255,0,0,0.7)] hover:shadow-[0_0_50px_rgba(255,0,0,1)] transition-shadow duration-300 z-30"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            Launch 
+                        </motion.button>
+                    )}
+                    </>
             </motion.div>
          )}
         </AnimatePresence>

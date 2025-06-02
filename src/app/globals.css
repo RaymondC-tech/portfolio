@@ -16,3 +16,20 @@
 .animate-flash {
     animation: blink 1.5s infinite;
 }
+
+/* Scrolling bar color*/
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #555;  /* Color of scrollbar thumb */
+    border-radius: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Or use a dark background if needed */
+  }
+  .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: #888; /* Lighter gray when hovered */
+  }
