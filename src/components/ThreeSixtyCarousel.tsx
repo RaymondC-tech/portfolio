@@ -43,7 +43,7 @@ export default function ProjectCarousel( {
     //2. Auto-rotate every autoRotateInterval milliseconds
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) * slideCount);
+            setCurrentIndex((prev) => (prev + 1) % slideCount);
         }, autoRotateInterval);
 
         return () => {
@@ -78,7 +78,7 @@ export default function ProjectCarousel( {
 
         //convert horizontal drag distance to degrees ( can expereince with sensitivity)
         // 1px of horizontal drag = 0.5 degree rotation
-        const newRotation = startRotation + deltaX * 0.5;
+        const newRotation = startRotation + deltaX * 0.3;
         setRotation(newRotation);
     };
 
@@ -93,6 +93,8 @@ export default function ProjectCarousel( {
         //compure which slide index we neareted to after dragging
         //round to nearest integer of rotation / anglePerSlide
         let rawIndex = rotation / anglePerSlide;
+
+        rawIndex =  rawIndex % slideCount
 
         // rawIndex might be negative or > slideCount. Normalize it:
         if (rawIndex < 0) rawIndex += slideCount;
@@ -113,8 +115,8 @@ export default function ProjectCarousel( {
     <div
     ref = {containerRef}
     //Make outer wrapper a fixed square (or rectangle)
-    style={{ width: `${width}px`, height: `${height}px`}}
-    className={`relative mx-auto overflow-visible cursor-grab prespective-[1000px]`}
+    style={{ width: `${width}px`, height: `${height}px`, perspective: '1000px'}}
+    className={`relative mx-auto overflow-visible cursor-grab`}
     onMouseDown={handlePointerDown}
     onMouseMove={handlePointerMove}
     onMouseUp={handlePointerUp}
@@ -126,8 +128,10 @@ export default function ProjectCarousel( {
         {/* Inner rotating cylinder wrapper
             We apply rotateY = -rotation (negative so that positive drag rotates the carousel in the correct rotation */}
         <div
-            className="absolute top-0 left-0 w-full h-full transform-style-preserve-3d transition-transform duration-500 ease-in-out"
-            style={{ transform: `rotateY(${-rotation}deg)`}}
+            className="absolute top-0 left-0 w-full h-full transition-transform duration-500 ease-in-out"
+            style={{ transform: `rotateY(${-rotation}deg)`,
+                     transformStyle: 'preserve-3d'
+                }}
         >
             {slides.map((slide, idx) => {
                 //each slide rotated by idx * anglePerSlide, the moved out by "radius"
@@ -139,9 +143,9 @@ export default function ProjectCarousel( {
                 return (
                     <div
                         key={slide.id}
-                        className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
+                        className="absolute inset-0 flex items-center justify-center"
                         style={{
-                            transform: `rotateY(${thisAngle}deg) translate(${radius}px)`,
+                            transform: `rotateY(${thisAngle}deg) translateZ(${radius}px)`,
                         }}
                     >
                         {/* actual slide image */}
@@ -171,11 +175,11 @@ export default function ProjectCarousel( {
                                         {slide.title}
                                     </span>
                                 </div>   
-                            )};
+                            )}
                         </div>    
                     </div>    
                 );
-            })};
+            })}
         </div>
     </div>
   );

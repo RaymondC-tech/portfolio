@@ -29,6 +29,12 @@ export const slidesData: Slide[] = [
         imgSrc: "/caffio.png",
         link: "https://github.com/RaymondC-tech/Caffio"
 
+    },
+    {
+        id: 5,
+        title: "Simply",
+        imgSrc: "/simply.png",
+        link: "https://github.com/RaymondC-tech/Simply"
     }
 ]
 
