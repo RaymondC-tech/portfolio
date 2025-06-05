@@ -1,186 +1,279 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Slide } from '@/types/Slide'
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Slide } from '@/types/Slide';
 import Image from 'next/image';
 
 interface ThreeSixtyCarouselProps {
-    slides: Slide[]; 
-    width?: number;  //width of slide
-    height?: number;  //height of slide
-    radius?: number; //distance from center to slide face in (px)
-    autoRotateInterval?: number; //ms between auto-rotation steps
+  slides: Slide[];
+  width?: number;
+  height?: number;
+  radius?: number;
+  autoRotateInterval?: number;
 }
 
-export default function ProjectCarousel( { 
-    slides,
-    width = 200,
-    height = 200,
-    radius = 300, 
-    autoRotateInterval = 5000,
+export default function ProjectCarousel({
+  slides,
+  width = 300,
+  height = 200,
+  radius = 600,
+  autoRotateInterval = 5000,
 }: ThreeSixtyCarouselProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rotatingRef = useRef<HTMLDivElement>(null);
 
-    const containerRef = useRef<HTMLDivElement | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [frontIndex, setFrontIndex] = useState(0);
 
-    const [currentIndex, setCurrentIndex] = useState<number>(0);
+  // A ref to mirror frontIndex so our callback sees the up-to-date value
+  const frontRef = useRef(frontIndex);
+  useEffect(() => {
+    frontRef.current = frontIndex;
+  }, [frontIndex]);
 
-    // absolute rotation in degree of entire carousel wrapper
-    const [rotation, setRotation] = useState<number>(0);
+  const rotationRef = useRef(0);
+  const draggingRef = useRef(false);
+  const lastXRef = useRef(0);
 
-    //drag-tracking state
-    const [dragging, setDragging] = useState<boolean>(false);
-    const [startX, setStartX] = useState<number>(0);
-    const [startRotation, setStartRotation] = useState<number>(0);
+  const slideCount = slides.length;
+  const anglePerSlide = 360 / slideCount;
+  const halfSlice = anglePerSlide / 2;
 
-    const slideCount = slides.length;
-    const anglePerSlide = 360 / slideCount;
+  // On mount, ensure the inner div starts at 0°
+  useEffect(() => {
+    if (rotatingRef.current) {
+      rotatingRef.current.style.transform = 'rotateY(0deg)';
+    }
+  }, []);
 
-    //1. When currentIndex changes, snap `rotation` to exactly currentIndex x anglePerSlide
-    useEffect(() => {
-        setRotation(currentIndex * anglePerSlide)
-    }, [currentIndex, anglePerSlide])
+  // Only update frontIndex when currentIndex changes (after a snap)
+  useEffect(() => {
+    setFrontIndex(currentIndex);
+  }, [currentIndex]);
 
-    //2. Auto-rotate every autoRotateInterval milliseconds
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) % slideCount);
-        }, autoRotateInterval);
+  // Auto-rotate timer
+  useEffect(() => {
 
-        return () => {
-            clearInterval(timer);
+    if (draggingRef.current) return;
+
+    const id = setInterval(() => {
+
+      //1 compute next index
+      const nextIndex = (currentIndex - 1 + slideCount) % slideCount;
+
+      //2 apply new angle
+      const newAngle = rotationRef.current + anglePerSlide;
+      rotationRef.current = newAngle;
+
+      //3 apply to dom
+      if (rotatingRef.current){
+        rotatingRef.current.style.transition = 'transform 0.3s ease';
+        rotatingRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
+
+        const onEnd = () => {
+          if (rotatingRef.current) rotatingRef.current.style.transition = '';
+          rotatingRef.current?.removeEventListener('transitionend', onEnd);
         };
-    }, [slideCount, autoRotateInterval])
+        rotatingRef.current.addEventListener('transitionend', onEnd);
+      }
+      //4 bump currentIndex and frontIndex togethere;
+      setCurrentIndex(nextIndex);
+      setFrontIndex(nextIndex);
 
-    //3. drag start (mousedown / touchstart)
-    const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
-        e.preventDefault();
-        setDragging(true);
+    }, autoRotateInterval);
+    return () => clearInterval(id);
+  }, [currentIndex, slideCount, anglePerSlide, autoRotateInterval]);
 
-        //hide built in cursor during drag for "grabbing effect"
-        if (containerRef.current) {
-            containerRef.current.style.cursor = 'grabbing';
+
+  // Normalize into [0,360)
+  const normalizeDeg = (deg: number) => {
+    let d = deg % 360;
+    return d < 0 ? d + 360 : d;
+  };
+
+  // Minimal distance on a 360° circle
+  const minimalAngularDistance = (a: number, b: number) => {
+    const diff = Math.abs(a - b);
+    return Math.min(diff, 360 - diff);
+  };
+
+  // Handle pointer move (drag)
+  const handlePointerMove = useCallback(
+    (evt: MouseEvent | TouchEvent) => {
+      if (!draggingRef.current) return;
+      evt.preventDefault();
+
+      // Current pointer X
+      const x = evt instanceof MouseEvent ? evt.clientX : evt.touches[0].clientX;
+      const dx = x - lastXRef.current;
+
+      // Rotate by dx * sensitivity
+      const sensitivity = 0.2;
+      rotationRef.current += dx * sensitivity;
+
+      // Immediate transform (no transition)
+      if (rotatingRef.current) {
+        rotatingRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
+      }
+
+      // Compute rotDeg in [0,360)
+      const rotDeg = normalizeDeg(-rotationRef.current);
+
+      // Find which slide’s face-angle is closest to rotDeg
+      let bestIdx = 0;
+      let bestDist = Infinity;
+      for (let idx = 0; idx < slideCount; idx++) {
+        const faceAngle = normalizeDeg(idx * anglePerSlide);
+        const dist = minimalAngularDistance(rotDeg, faceAngle);
+        if (dist < bestDist) {
+          bestDist = dist;
+          bestIdx = idx;
         }
+      }
 
-        //record initial pointer x
-        const xPos = 'clientX' in e ? e.clientX: e.touches[0].clientX;
-        setStartX(xPos);
+      // If that distance ≤ halfSlice, and it differs from the current frontRef,
+      // update both state and ref so next callback sees the new value
+      if (bestDist <= halfSlice && bestIdx !== frontRef.current) {
+        setFrontIndex(bestIdx);
+        frontRef.current = bestIdx;
+      }
 
-        //record rotation at moment of mousedown
-        setStartRotation(rotation);
-    };
+      lastXRef.current = x;
+    },
+    [anglePerSlide, halfSlice, slideCount]
+  );
 
-    //4. Drag move (mousemove / touch move)
-    const handlePointerMove = (e: React.MouseEvent | React.TouchEvent) => {
-        if (!dragging) return;
+  // Handle pointer up (snap to nearest face)
+  const handlePointerUp = useCallback(() => {
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
 
-        const xPos = 'clientX' in e ? e.clientX : e.touches[0].clientX;
-        const deltaX = xPos - startX;
+    if (containerRef.current) {
+      containerRef.current.style.cursor = 'grab';
+    }
 
-        //convert horizontal drag distance to degrees ( can expereince with sensitivity)
-        // 1px of horizontal drag = 0.5 degree rotation
-        const newRotation = startRotation + deltaX * 0.3;
-        setRotation(newRotation);
-    };
+    window.removeEventListener('mousemove', handlePointerMove as any);
+    window.removeEventListener('touchmove', handlePointerMove as any);
+    window.removeEventListener('mouseup', handlePointerUp);
+    window.removeEventListener('touchend', handlePointerUp);
 
-    //5.drag end (mouseup / touchend)-> snap to nearest slide
-    const handlePointerUp = () => {
-        setDragging(false);
+    // Normalize the rotation, then find nearest index exactly as above
+    const rotDeg = normalizeDeg(-rotationRef.current);
+    let bestIdx = 0;
+    let bestDist = Infinity;
+    for (let idx = 0; idx < slideCount; idx++) {
+      const faceAngle = normalizeDeg(idx * anglePerSlide);
+      const dist = minimalAngularDistance(rotDeg, faceAngle);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestIdx = idx;
+      }
+    }
+    const nearestIndex = bestIdx;
 
-        if (containerRef.current) {
-            containerRef.current.style.cursor = 'grab';
-        }
+    // Snap via the shortest 360° path
+    const baseFace = normalizeDeg(nearestIndex * anglePerSlide);
+    const currentAngle = rotationRef.current;
+    const k = Math.round((currentAngle + baseFace) / 360);
+    const targetAngle = - baseFace + k * 360;
+    rotationRef.current = targetAngle;
 
-        //compure which slide index we neareted to after dragging
-        //round to nearest integer of rotation / anglePerSlide
-        let rawIndex = rotation / anglePerSlide;
+    if (rotatingRef.current) {
+      rotatingRef.current.style.transition = 'transform 0.3s ease';
+      rotatingRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
+      const onEnd = () => {
+        if (rotatingRef.current) rotatingRef.current.style.transition = '';
+        rotatingRef.current?.removeEventListener('transitionend', onEnd);
+      };
+      rotatingRef.current.addEventListener('transitionend', onEnd);
+    }
 
-        rawIndex =  rawIndex % slideCount
+    setCurrentIndex(nearestIndex);
+  }, [anglePerSlide, slideCount, handlePointerMove]);
 
-        // rawIndex might be negative or > slideCount. Normalize it:
-        if (rawIndex < 0) rawIndex += slideCount;
+  // Handle pointer down (start drag)
+  const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    draggingRef.current = true;
 
-        //round to nearest integer
-        const nearestIndex = Math.round(rawIndex) % slideCount;
-        setCurrentIndex(nearestIndex)
-    };
+    if (containerRef.current) {
+      containerRef.current.style.cursor = 'grabbing';
+    }
 
-    //6. helper for user hover on front-facing slide, show tis title and scale up
-    const isFrontSlide = (idx: number) => {
-        return idx === currentIndex;
-    };
+    const x = 'clientX' in e ? e.clientX : e.touches[0].clientX;
+    lastXRef.current = x;
 
+    // Remove any CSS transition so drag is instant
+    if (rotatingRef.current) {
+      rotatingRef.current.style.transition = '';
+    }
 
+    window.addEventListener('mousemove', handlePointerMove as any);
+    window.addEventListener('touchmove', handlePointerMove as any, { passive: false });
+    window.addEventListener('mouseup', handlePointerUp);
+    window.addEventListener('touchend', handlePointerUp);
+  };
 
   return (
     <div
-    ref = {containerRef}
-    //Make outer wrapper a fixed square (or rectangle)
-    style={{ width: `${width}px`, height: `${height}px`, perspective: '1000px'}}
-    className={`relative mx-auto overflow-visible cursor-grab`}
-    onMouseDown={handlePointerDown}
-    onMouseMove={handlePointerMove}
-    onMouseUp={handlePointerUp}
-    onMouseLeave={dragging ? handlePointerUp: undefined}
-    onTouchStart={handlePointerDown}
-    onTouchMove={handlePointerMove}
-    onTouchEnd={handlePointerUp}
+      ref={containerRef}
+      style={{
+        width: `${width}px`,
+        height: `${height}px`,
+        perspective: '1000px',
+      }}
+      className="relative mx-auto overflow-visible cursor-grab"
+      onMouseDown={handlePointerDown}
+      onTouchStart={handlePointerDown}
     >
-        {/* Inner rotating cylinder wrapper
-            We apply rotateY = -rotation (negative so that positive drag rotates the carousel in the correct rotation */}
-        <div
-            className="absolute top-0 left-0 w-full h-full transition-transform duration-500 ease-in-out"
-            style={{ transform: `rotateY(${-rotation}deg)`,
-                     transformStyle: 'preserve-3d'
-                }}
-        >
-            {slides.map((slide, idx) => {
-                //each slide rotated by idx * anglePerSlide, the moved out by "radius"
-                const thisAngle = idx * anglePerSlide
-
-                //Is this the "front" slide? If so, we'll enlarghe it and show the title below
-                const front = isFrontSlide(idx)
-
-                return (
-                    <div
-                        key={slide.id}
-                        className="absolute inset-0 flex items-center justify-center"
-                        style={{
-                            transform: `rotateY(${thisAngle}deg) translateZ(${radius}px)`,
-                        }}
-                    >
-                        {/* actual slide image */}
-                        <div className="relative flex flex-col items-center">
-                            <img
-                                src={slide.imgSrc}
-                                alt={slide.title}
-                                className={`object-cover rounded-lg transition-transform duration-300
-                                    ${front ?'scale-110 shadow-2xl' : 'scale-90 opacity-70'}
-                                    `}
-                                style={{
-                                    width: `${width * 0.6}px`,
-                                    height: `${height * 0.6}px`
-                                }}
-                                //only front image is hoverable\
-                                onMouseEnter={() => {
-                                    if (front) containerRef.current?.classList.add('cursor-pointer');
-                                }}
-                                onMouseLeave={() => {
-                                    if (front) containerRef.current?.classList.remove('cursor-pointer')
-                                }}
-                            />
-                            {/*only renbder project title if this slide is front */}
-                            {front && (
-                                <div className='absolute bottom-[-1.5rem] text-center'>
-                                    <span className="bg-black bg-opacity-50 text-white px-3 py-1 rounded-md text-sm">
-                                        {slide.title}
-                                    </span>
-                                </div>   
-                            )}
-                        </div>    
-                    </div>    
-                );
-            })}
-        </div>
+      <div
+        ref={rotatingRef}
+        className="absolute inset-0"
+        style={{
+          transform: `rotateY(${rotationRef.current}deg)`,
+          transformStyle: 'preserve-3d',
+        }}
+      >
+        {slides.map((slide, idx) => {
+          const thisAngle = idx * anglePerSlide;
+          const isFront = idx === frontIndex;
+          return (
+            <div
+              key={slide.id}
+              className="absolute inset-0 flex items-center justify-center"
+              style={{
+                transform: `rotateY(${thisAngle}deg) translateZ(${radius}px)`,
+              }}
+            >
+              <div className="relative flex flex-col items-center">
+                <Image
+                  src={slide.imgSrc}
+                  alt={slide.title}
+                  width={Math.round(width * 0.6)}
+                  height={Math.round(height * 0.6)}
+                  className={`
+                    object-cover rounded-lg transition-transform duration-300
+                    ${isFront ? 'scale-110 shadow-2xl' : 'scale-90 opacity-60'}
+                  `}
+                  onMouseEnter={() => {
+                    if (isFront) containerRef.current?.classList.add('cursor-pointer');
+                  }}
+                  onMouseLeave={() => {
+                    if (isFront) containerRef.current?.classList.remove('cursor-pointer');
+                  }}
+                />
+                {isFront && (
+                  <div className="absolute bottom-[-1.5rem] text-center">
+                    <span className="bg-black bg-opacity-50 text-white px-3 py-1 rounded-md text-sm">
+                      {slide.title}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
