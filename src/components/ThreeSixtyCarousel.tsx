@@ -16,7 +16,7 @@ export default function ProjectCarousel({
   slides,
   width = 300,
   height = 200,
-  radius = 600,
+  radius = 800,
   autoRotateInterval = 5000,
 }: ThreeSixtyCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -220,9 +220,9 @@ export default function ProjectCarousel({
       style={{
         width: `${width}px`,
         height: `${height}px`,
-        perspective: '1000px',
+        perspective: '2000px',
       }}
-      className="relative mx-auto overflow-visible cursor-grab"
+      className="relative mx-auto overflow-visible cursor-grab mt-150"
       onMouseDown={handlePointerDown}
       onTouchStart={handlePointerDown}
     >
@@ -235,26 +235,35 @@ export default function ProjectCarousel({
         }}
       >
         {slides.map((slide, idx) => {
+          const thumbW = Math.round(width * 0.6)
+          const thumbH = Math.round(height * 0.6)
           const thisAngle = idx * anglePerSlide;
           const isFront = idx === frontIndex;
           return (
             <div
               key={slide.id}
-              className="absolute inset-0 flex items-center justify-center"
+              className="flex-col absolute inset-0 flex items-center justify-center"
               style={{
                 transform: `rotateY(${thisAngle}deg) translateZ(${radius}px)`,
               }}
             >
-              <div className="relative flex flex-col items-center">
+              <div className={`rounded-lg overflow-hidden bg-gray-500
+                    transform transition-transform duration-500
+                    ${isFront ? 'scale-300 shadow-3xl' : 'scale-80 opacity-60'}
+              `}
+                  style={{ width: `${thumbW}px`, height: `${thumbH}px`}}
+                  >
                 <Image
                   src={slide.imgSrc}
                   alt={slide.title}
-                  width={Math.round(width * 0.6)}
-                  height={Math.round(height * 0.6)}
+                  width={thumbW}
+                  height={thumbH}
+                  quality={100}
                   className={`
-                    object-cover rounded-lg transition-transform duration-300
-                    ${isFront ? 'scale-110 shadow-2xl' : 'scale-90 opacity-60'}
+                     rounded-lg  object-contain w-full h-full
+                    ${isFront ? 'scale-100 shadow-2xl' : 'scale-90 opacity-60'}
                   `}
+                  priority={isFront}
                   onMouseEnter={() => {
                     if (isFront) containerRef.current?.classList.add('cursor-pointer');
                   }}
@@ -262,14 +271,14 @@ export default function ProjectCarousel({
                     if (isFront) containerRef.current?.classList.remove('cursor-pointer');
                   }}
                 />
-                {isFront && (
-                  <div className="absolute bottom-[-1.5rem] text-center">
-                    <span className="bg-black bg-opacity-50 text-white px-3 py-1 rounded-md text-sm">
+              </div>
+              {isFront && (
+                  <div className="mt-5 text-center">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded-md text-sm">
                       {slide.title}
                     </span>
                   </div>
                 )}
-              </div>
             </div>
           );
         })}
