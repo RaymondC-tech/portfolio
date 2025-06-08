@@ -1,23 +1,31 @@
+'use client'
+
 import type { Metadata } from "next";
 import "./globals.css";
-import {Starfield} from '@/components'
+import {Starfield, Navbar} from '@/components'
+import { LoadingProvider, useLoading } from './LoadingContext'
 
-export const metadata: Metadata = {
-  title: "Raymond Chan portfolio",
-  description: "Portfolio site",
-};
+function RootLayoutContent({ children }: { children: React.ReactNode}) {
+  const { isLoaded } = useLoading()
+  return (
+    <>
+    <Starfield/>
+    {isLoaded && <Navbar />}
+    {children}
+    </>
+  )
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="en">
-      <body className="relative min-h-screen overflow-hidden text-white">
-        <Starfield/>
-        {children}
-      </body>
+      <LoadingProvider>
+        <body className="relative min-h-screen overflow-hidden text-white">
+          <RootLayoutContent>
+            {children}
+          </RootLayoutContent>
+        </body>
+      </LoadingProvider>
     </html>
   );
 }

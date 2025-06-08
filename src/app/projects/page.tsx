@@ -1,4 +1,3 @@
-import React from 'react';
 import { Slide } from '@/types/Slide'
 import { ThreeSixtyCarousel } from '@/components';
 import { slidesData } from '@/data/slides'

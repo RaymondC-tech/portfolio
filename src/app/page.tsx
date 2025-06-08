@@ -1,8 +1,8 @@
 'use client'
 
 import {useState} from 'react';
-import {Chatbox, Button, TypingIntro, Navbar} from '@/components'
-import RocketIntro from '@/components/RocketIntro'
+import {Chatbox, Button, TypingIntro, Navbar, RocketIntro} from '@/components'
+
 
 export default function HomePage() {
   // const [showMainContent, setShowMainContent] = useState(false);

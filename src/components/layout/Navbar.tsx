@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { MdEmail } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
@@ -8,13 +9,35 @@ const Navbar = () => {
     <nav className = " flex-wrap flex justify-between items-center z-10 top-0 mx-100">
     
       {/* left half*/}
-      <div className="flex items-center gap-5">
-        <button className="text-white text-lg">Raymond</button>
-        <button className="hover:underline text-white">Home</button>
-        <button className="hover:underline text-white">About</button>
-        <button className="hover:underline text-white">Experience</button>
-        <button className="hover:underline text-white">Projects</button>
-      </div>
+      <ul className="flex items-center gap-5"
+          aria-label="Main navigation"
+      >
+        <li>
+          <Link href="/" className="text-white text-lg hover:underline">
+            Raymond
+          </Link>
+        </li>
+        <li>
+          <Link href="/" className="text-white hover: underline">
+            Home
+          </Link>
+        </li>
+          <Link href="/about" className="text-white hover:underline">
+            About
+          </Link>
+        <li>
+          <Link href="/experiences" className='text-white hover:underline'>
+            Experience
+          </Link>
+        </li>
+        
+        <li>
+          <Link href="/projects" className="text-white hover:underline">
+            Project
+          </Link>
+          
+        </li>
+      </ul>
 
       {/* Right half*/}
       <div className = "w-1/10 flex gap-5">

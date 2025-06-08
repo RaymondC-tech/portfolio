@@ -4,3 +4,4 @@ export interface Slide {
     imgSrc: string;
     link: string
 }
+
