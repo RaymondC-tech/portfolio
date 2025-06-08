@@ -8,7 +8,7 @@ export default function HomePage() {
   // const [showMainContent, setShowMainContent] = useState(false);
 
   return (
-    <main className="relative min-h-screen">
+    <main className="relative min-h- pt-16">
       {/* 
               {!showMainContent ? (
                 <RocketIntro onComplete={() => setShowMainContent(true)} />
@@ -24,7 +24,7 @@ export default function HomePage() {
               )}
       */}
       <>
-        <Navbar />
+        
         <div className="relative z-10">
           <TypingIntro/>
           <Chatbox/>

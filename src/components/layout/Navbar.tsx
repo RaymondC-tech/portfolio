@@ -18,7 +18,7 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
-          <Link href="/" className="text-white hover: underline">
+          <Link href="/" className="text-white hover:underline">
             Home
           </Link>
         </li>
