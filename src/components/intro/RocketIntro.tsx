@@ -4,7 +4,7 @@ import { useState } from 'react'; //track when roket has launch
 import { motion, AnimatePresence } from 'framer-motion'
 //motion for animating elements and AnimatePresence ahndles exit animation and conditional rendering with animation
 import Image from 'next/image';
-import Starfield from './Starfield'
+import {Starfield} from '@/components'
 
 
 export default function RocketIntro({ onComplete }: { onComplete: () => void }){ //deconstructing props
