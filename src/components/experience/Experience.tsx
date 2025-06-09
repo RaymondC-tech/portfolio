@@ -20,7 +20,7 @@ export default function Experience({exp, index}: ExpereinceComponentProps) {
       {/*left collumn */}
       {isLeft ? (
         <div className="flex justify-center pr-4">
-          <div className="relative border border-white border-5 rounded-xl px-[2vw] py-[2vh] w-2/5">
+          <div className="relative border border-white border-5 rounded-xl px-[2vw] py-[2vh] w-1/2">
 
           {/*arrow */}
           <div className="absolute top-1/2 right-0 transform translate-x-8 -translate-y-1/2">
@@ -61,12 +61,13 @@ export default function Experience({exp, index}: ExpereinceComponentProps) {
           height={130}
           className=" rounded-full"
         />
-          <span className={`absolute top-1/2 transform -translate-y-1/2 text-sm text-white ${isLeft ? 'translate-x-100' : '-translate-x-100'}`}> {exp.date}</span>
+          <span className={`whitespace-nowrap flex absolute top-1/2 transform -translate-y-1/2 text-lg text-white 
+            ${isLeft ? 'translate-x-100' : '-translate-x-100'}`}> {exp.date}</span>
       </div>
       {/*right collumn */}
       <div className="flex justify-center pl-4">
         {!isLeft && (
-          <div className="relative border border-white border-5 rounded-xl px-[2vw] py-[2vh] w-2/5">
+          <div className="relative border border-white border-5 rounded-xl px-[2vw] py-[2vh] w-1/2">
             {/* arrow */}
             <div className="absolute top-1/2 left-0 transform -translate-x-8 -translate-y-1/2">
               <MdArrowLeft className="text-white text-5xl"/>

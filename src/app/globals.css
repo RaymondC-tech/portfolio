@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+
+
+
 @keyframes blink{ 
     0%, 100% { opacity: 1;}
     50% { opacity: 0; }
@@ -33,3 +36,7 @@
   .custom-scrollbar:hover::-webkit-scrollbar-thumb {
     background-color: #888; /* Lighter gray when hovered */
   }
+
+@layer utilities {
+    .text-2xs { font-size: 0.5rem; }
+}

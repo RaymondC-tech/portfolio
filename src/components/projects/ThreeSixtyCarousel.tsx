@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Slide } from '@/types/Slide';
 import Image from 'next/image';
+import { FaGithub } from "react-icons/fa";
 
 interface ThreeSixtyCarouselProps {
   slides: Slide[];
@@ -14,9 +15,9 @@ interface ThreeSixtyCarouselProps {
 
 export default function ProjectCarousel({
   slides,
-  width = 300,
-  height = 200,
-  radius = 800,
+  width = 600,
+  height = 300,
+  radius = 1000,
   autoRotateInterval = 5000,
 }: ThreeSixtyCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -147,7 +148,9 @@ export default function ProjectCarousel({
   const handlePointerUp = useCallback(() => {
     if (!draggingRef.current) return;
     draggingRef.current = false;
-
+    
+    document.body.style.cursor = '';
+    
     if (containerRef.current) {
       containerRef.current.style.cursor = 'grab';
     }
@@ -179,7 +182,7 @@ export default function ProjectCarousel({
     rotationRef.current = targetAngle;
 
     if (rotatingRef.current) {
-      rotatingRef.current.style.transition = 'transform 0.3s ease';
+      rotatingRef.current.style.transition = 'transform 0.5s ease';
       rotatingRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
       const onEnd = () => {
         if (rotatingRef.current) rotatingRef.current.style.transition = '';
@@ -195,6 +198,8 @@ export default function ProjectCarousel({
   const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     draggingRef.current = true;
+    
+    document.body.style.cursor = 'grabbing'
 
     if (containerRef.current) {
       containerRef.current.style.cursor = 'grabbing';
@@ -220,9 +225,9 @@ export default function ProjectCarousel({
       style={{
         width: `${width}px`,
         height: `${height}px`,
-        perspective: '2000px',
+        perspective: '3000px',
       }}
-      className="relative mx-auto overflow-visible cursor-grab mt-150"
+      className="relative mx-auto overflow-visible cursor-grab mt-50"
       onMouseDown={handlePointerDown}
       onTouchStart={handlePointerDown}
     >
@@ -235,50 +240,56 @@ export default function ProjectCarousel({
         }}
       >
         {slides.map((slide, idx) => {
-          const thumbW = Math.round(width * 0.6)
-          const thumbH = Math.round(height * 0.6)
+          const baseW = Math.round(width * 0.6)
+          const baseH = Math.round(height * 0.6)
+          //const scaleFactor = idx === frontIndex ? 3 : 0.8
+          //const thumbW = baseW * scaleFactor;
+          //const thumbH = baseH * scaleFactor
           const thisAngle = idx * anglePerSlide;
-          const isFront = idx === frontIndex;
+          //const isFront = idx === frontIndex;
           return (
             <div
               key={slide.id}
-              className="flex-col absolute inset-0 flex items-center justify-center"
+              className="flex absolute inset-0 items-start justify-center"
               style={{
                 transform: `rotateY(${thisAngle}deg) translateZ(${radius}px)`,
               }}
             >
-              <div className={`rounded-lg overflow-hidden bg-gray-500
-                    transform transition-transform duration-500
-                    ${isFront ? 'scale-300 shadow-3xl' : 'scale-80 opacity-60'}
-              `}
-                  style={{ width: `${thumbW}px`, height: `${thumbH}px`}}
+              <div className="relative rounded-lg overflow-visible
+                    transform transition-transform ease-in-out duration-1000 bg-[#05051e] flex-shrink-0 flex items-center justify-center "
+                  style={{ width: `${600}px`, height: `${300}px`}}
                   >
                 <Image
                   src={slide.imgSrc}
                   alt={slide.title}
-                  width={thumbW}
-                  height={thumbH}
+                  fill
+                  style={{ objectFit: 'contain' }}
                   quality={100}
-                  className={`
-                     rounded-lg  object-contain w-full h-full
-                    ${isFront ? 'scale-100 shadow-2xl' : 'scale-90 opacity-60'}
-                  `}
-                  priority={isFront}
-                  onMouseEnter={() => {
-                    if (isFront) containerRef.current?.classList.add('cursor-pointer');
-                  }}
-                  onMouseLeave={() => {
-                    if (isFront) containerRef.current?.classList.remove('cursor-pointer');
-                  }}
+                  //priority={isFront}
+                  className="z-30 relative filter brightness-50"
                 />
+                <div className="flex flex-col items-center justify-center relative z-30 px-30 top-1/2 -translate-y-25">
+                  <h3>
+                    {slide.title}
+                  </h3>
+                  <h5 className="text-xs text-center">
+                    {slide.shortDescription}
+                  </h5>
+                  <p className="text-2xs">
+                    {slide.languagesUsed}
+                  </p>
+                  <a href={slide.link} target="_blank" rel="noopenber nopreferrer">
+                    <FaGithub className="w-4 h-4"/>
+                  </a>
+                </div>
               </div>
-              {isFront && (
+              {/* {isFront && (
                   <div className="mt-5 text-center">
                     <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded-md text-sm">
                       {slide.title}
                     </span>
                   </div>
-                )}
+                )} */}
             </div>
           );
         })}
