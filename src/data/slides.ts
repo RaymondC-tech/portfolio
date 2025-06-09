@@ -1,39 +1,38 @@
 import { Slide } from '@/types/Slide'
-import Image from 'next/image'
 
 export const slidesData: Slide[] = [
     {
         id: 1,
         title: "Wattup",
-        imgSrc: "/wattup.jpg",
+        imgSrc: "/project_image/wattup.jpg",
         link: "https://github.com/hieuletainguyen/DeltahackXI"
 
     },
     {
         id: 2,
         title: "AntiTetris",
-        imgSrc: "/antitetris.jpg",
+        imgSrc: "/project_image/antitetris.jpg",
         link: "https://github.com/enxilium/antitetris"
 
     },
     {
         id: 3,
         title: "SafeSteps",
-        imgSrc: "/safesteps.png",
+        imgSrc: "/project_image/safesteps.png",
         link: "https://github.com/RaymondC-tech/SafeSteps"
 
     },
     {
         id: 4,
         title: "Caffio",
-        imgSrc: "/caffio.png",
+        imgSrc: "/project_image/caffio.png",
         link: "https://github.com/RaymondC-tech/Caffio"
 
     },
     {
         id: 5,
         title: "Simply",
-        imgSrc: "/simply.png",
+        imgSrc: "/project_image/simply.png",
         link: "https://github.com/RaymondC-tech/Simply"
     }
 ]

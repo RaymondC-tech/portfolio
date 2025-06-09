@@ -4,5 +4,6 @@ export interface Experiences {
     title: string,
     description: string[],
     date: string,
+    imageSrc: string
 
 }

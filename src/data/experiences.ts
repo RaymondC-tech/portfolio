@@ -13,7 +13,8 @@ export const experienceData: Experiences[] = [
         "Managed a remote team to coordinate marketing, outreach, prize distribution, and competition structure to ensure smooth \
         execution"
         ],
-    date: "06/2024 - 09/2024"
+    date: "06/2024 - 09/2024",
+    imageSrc:"/experience_image/recesshacks_logo.jpg"
     },
     {id: 2,
         organization: "Mathnasium Markham",
@@ -25,7 +26,8 @@ export const experienceData: Experiences[] = [
     
             "Collaborated with fellow instructors to assess student progress, adjusting teaching strategies for optimal learning outcomes"
             ],
-        date: "08/2023 - 07/2024"
+        date: "08/2023 - 07/2024",
+        imageSrc:"/experience_image/mathnasium_logo.jpg"
     }
 ]
 
