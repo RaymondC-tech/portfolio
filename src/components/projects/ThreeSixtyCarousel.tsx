@@ -260,7 +260,7 @@ export default function ProjectCarousel({
           return (
             <div
               key={slide.id}
-              className="flex absolute inset-0 items-start justify-center"
+              className="flex flex-col absolute inset-0 items-start justify-center gap-4"
               style={{
                 transform: `rotateY(${thisAngle}deg) translateZ(${radius}px)`,
               }}
@@ -292,28 +292,33 @@ export default function ProjectCarousel({
                   style={{ objectFit: 'contain' }}
                   quality={100}
                   //priority={isFront}
-                  className="z-10 absolute filter brightness-50"
+                  className={`z-10 absolute filter ${isFront ? '' : 'brightness-50'}`}
                 />
-                <div className="flex flex-col items-center justify-center relative z-30 px-30 top-1/2 -translate-y-25">
-                  <h3 className="text-lg font-semibold text-white mb-1">
-                    {slide.title}
-                  </h3>
-                  <h5 className="text-xs text-center text-gray-100 mb-2">
-                    {slide.shortDescription}
-                  </h5>
-                  <p className="text-2xs text-gray-200">
-                    {slide.languagesUsed}
-                  </p>
-                  <a href={slide.link} target="_blank" rel="noopenber nopreferrer">
-                    <FaGithub className="w-4 h-4"/>
-                  </a>
-                </div>
+                
               </div>
-             
-                <div>
-
+             {isFront && (
+                <div className="w-[600px] text-center space-y-2">
+                <h3 className="text-2xl md:text-3xl font-bold text-white">
+                  {slides[currentIndex].title}
+                </h3>
+                <p className="text-base text-gray-300">
+                  {slides[currentIndex].shortDescription}
+                </p>
+                <div className="text-sm uppercase tracking-wide text-indigo-400">
+                  {slides[currentIndex].languagesUsed}
                 </div>
-            </div>
+                <a
+                  href={slides[currentIndex].link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex mt-3 text-white bg-gray-700 p-2 rounded-full hover:bg-gray-600"
+                >
+                  <FaGithub className="w-5 h-5" />
+                </a>
+              </div>
+             )}
+              
+              </div>
           );
         })}
       </div>
