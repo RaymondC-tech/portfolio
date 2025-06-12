@@ -2,24 +2,39 @@
 //useEffect to run code after each render (to type each letter)
 'use client'
 import React, { useEffect, useState} from 'react';
-import { IoMdMail } from "react-icons/io";
+import { useIntro } from '@/components'
+
+type TypingIntroProps = {
+    onComplete: () => void;
+}
 const lines = [
-    "Welcome I\'m Raymond",
-    "I like to build stuff occasionally",
-    "I'm a Computer Science student at the University of Toronto, passionate about full-stack development and machine learning. I love building tools that automate my life and make everyday tasks easier."
+    "welcome, raymond here.",
+    "I like to build stuff occasionally.",
 ];
 
 
-const TypingIntro = () => {
+const TypingIntro: React.FC<TypingIntroProps> = ({ onComplete }) => {
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] =  useState(0);
-    const [typedLines, setTypedLines] = useState(["","",""])
+    const [typedLines, setTypedLines] = useState(["",""])
     const [showButton, setShowButton] = useState(false);
+    const [doneSignaled, setDoneSignaled] = useState(false);
+    const { introDone } = useIntro();
 
 
     useEffect(() => {
+        if (introDone) {
+            setTypedLines(lines);
+            return;
+        }
         if (lineIndex >= lines.length) {
-            setShowButton(true);
+            if (!doneSignaled) {  //doneSignaled is to invoke that this typing intro only happens once when it is initially font / loaded first tiem on page, if page re-rendered, dont call onComplete
+                setDoneSignaled(true)
+                setTimeout(() => {
+                    onComplete()
+                }, 300);
+            }
+
             return;
         }
 
@@ -41,21 +56,41 @@ const TypingIntro = () => {
             }, 600);
         }
         return () => clearTimeout(timeout);
-    }, [charIndex, lineIndex]);
+    }, [charIndex, lineIndex, introDone, doneSignaled, onComplete]);
+
+    const fullFirstLine = lines[0]
+    const name = "raymond"
+    const [prefix, suffix] = fullFirstLine.toLowerCase().split(name); //splits lowercase string around substring stored in name where everyting before raymond is first elelmetn and evertying after is second element
+
+    
+    //part typed so far
+    const typed = typedLines[0];
+
+    //break it up into up-to-three pieces:
+    const prefixText = typed.slice(0, prefix.length);
+
+    //only color up to as many letters of "raymnond" has been typed
+    const nameText = typed.slice(prefix.length, Math.min(typed.length, prefix.length + name.length))
+
+    //any characters after name
+    const suffixText = typed.slice(prefix.length + name.length)
 
     return (
         <div className="text-center text-white space-y-4 mt-40">
-            <h1 className="text-7xl font-bold font-weight: 700">{typedLines[0]}{lineIndex === 0 && <Cursor />}</h1>
-            <h2 className="text-4xl">{typedLines[1]}{lineIndex === 1 && <Cursor />}</h2>
-            <p className="max-w-xl mx-auto text-gray-300">{typedLines[2]}{(lineIndex === 2 || lineIndex === 3) && <Cursor />}</p>
-            <div className={`flex justify-center transition-opacity duration-1000 ${showButton ? 'opacity-100': 'opacity-0'}`}>
-                <a href="mailto:raymondch49@gmail.com" className="flex items-center">
-                    <button className="flex items-center gap-2 px-4 py-2 border-white border-4 rounded hover:bg-gray-700">
-                        <IoMdMail/>
-                        Lets connect!
-                    </button>
-                </a>
-            </div> 
+            <h1 className="text-7xl font-bold">
+                {prefixText}
+                <span className="text-rose-600">
+                    {nameText}
+                </span>
+                {suffixText}
+                {lineIndex === 0 && <Cursor/>}
+            </h1>
+            
+            {/*<h1 className="text-7xl font-bold font-weight: 700">{typedLines[0]}{lineIndex === 0 && <Cursor />}</h1>*/}
+            <h2 className="text-4xl">{typedLines[1]}{(lineIndex === 1 || lineIndex === 2) && <Cursor />}</h2>
+
+
+            
         </div>
     )
 }

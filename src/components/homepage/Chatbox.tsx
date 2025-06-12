@@ -2,10 +2,16 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { FaArrowUp } from "react-icons/fa6";
-
+import { FaRegStar } from "react-icons/fa";
+import { useIntro } from '@/components'
 
 const Chatbox = () => {
-    const [messages, setMessages] = useState<{role: 'user' | 'ai', content: string, isTyping?: boolean }[]>([]); /* keeps list of chat messages, typsecript at the end */
+    const [messages, setMessages] = useState<{role: 'user' | 'ai', content: string, isTyping?: boolean }[]>([
+        {
+            role: 'ai',
+            content: "Ask me anything about my experience, projects and hobbies! Also, feel free to connect with me above!"
+        }
+    ]); /* keeps list of chat messages, typsecript at the end */
     const [input, setInput] = useState('');  //keeps track of what is in textbox
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -75,10 +81,10 @@ const Chatbox = () => {
     }, [messages]);
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-10 p-4 border border-[#202124] rounded-lg bg-[#202124] shadow z-10">
+    <div className="w-full max-w-7xl mx-auto mt-10 p-4 border border-[#202124] rounded-lg bg-[#202124] shadow z-10">
         <div className="h-64 overflow-y-auto space-y-2 mb-4 p-2 h-100 custom-scrollbar">
             {messages.map((m, i) => ( //m is message, i is index
-                <div key={i} className={`text-sm ${m.role === 'user' ? 'text-right' : 'text-left'}`}>
+                <div key={i} className={`text-lg ${m.role === 'user' ? 'text-right' : 'text-left'}`}>
                     {m.isTyping ? (
                         //dot animation
                         <div className="flex space-x-1">
@@ -97,8 +103,8 @@ const Chatbox = () => {
             ))}
             <div ref={messagesEndRef} />
         </div>
-        <form onSubmit={handleSubmit} className="w-full  " >  
-            <div className="relative w-full  border border-[#565869] rounded-xl px-4 py-3 pr-12 bg-[#343541]">
+        <form onSubmit={handleSubmit} className="w-full " >  
+            <div className="relative w-full  border border-[#565869] rounded-xl px-4 py-3 pr-12 bg-[#343541] text-lg ">
                 <textarea 
                     value={input} //keeps input synced with state
                     onChange={(e) => { setInput(e.target.value)} } //updates state when you
@@ -108,9 +114,9 @@ const Chatbox = () => {
                             handleSubmit(e)
                         }
                     }}
-                    rows={2}
-                    className="w-full resize-none overflow-hidden bg-transparent text-[#8E8EA0] focus:outline-none" 
-                    placeholder="Ask me anything :)"
+                    rows={1}
+                    className="w-full resize-none overflow-hidden bg-transparent text-[#8E8EA0] focus:outline-none text-lg" 
+                    placeholder="Whats on your mind?.."
                     onInput={(e) => {
                         e.currentTarget.style.height = 'auto';
                         e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`
