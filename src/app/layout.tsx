@@ -2,14 +2,16 @@
 
 import type { Metadata } from "next";
 import "./globals.css";
-import {Starfield, Navbar} from '@/components'
+import {Starfield, Navbar, Background1} from '@/components'
 import { LoadingProvider, useLoading } from './LoadingContext'
 
 function RootLayoutContent({ children }: { children: React.ReactNode}) {
   const { isLoaded } = useLoading()
   return (
     <>
-    <Starfield/>
+    *<Starfield/>
+   
+
     {isLoaded && <Navbar />}
     {children}
     </>

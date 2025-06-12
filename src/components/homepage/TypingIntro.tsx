@@ -45,8 +45,8 @@ const TypingIntro = () => {
 
     return (
         <div className="text-center text-white space-y-4 mt-40">
-            <h1 className="text-4xl font-bold">{typedLines[0]}{lineIndex === 0 && <Cursor />}</h1>
-            <h2 className="text-2xl">{typedLines[1]}{lineIndex === 1 && <Cursor />}</h2>
+            <h1 className="text-7xl font-bold font-weight: 700">{typedLines[0]}{lineIndex === 0 && <Cursor />}</h1>
+            <h2 className="text-4xl">{typedLines[1]}{lineIndex === 1 && <Cursor />}</h2>
             <p className="max-w-xl mx-auto text-gray-300">{typedLines[2]}{(lineIndex === 2 || lineIndex === 3) && <Cursor />}</p>
             <div className={`flex justify-center transition-opacity duration-1000 ${showButton ? 'opacity-100': 'opacity-0'}`}>
                 <a href="mailto:raymondch49@gmail.com" className="flex items-center">
