@@ -6,12 +6,18 @@ import { MdEmail } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { useIntro } from '@/components'
+import { usePathname } from 'next/navigation'
 
 const Navbar = () => {
+
   const { introDone } = useIntro();
+  const pathname = usePathname();
+
+  const showNav = pathname !== '/' || introDone
+  
   return (
-    <nav className = {`fix top-0 flex-wrap flex justify-between items-center z-40 top-0 mx-100 transition-opacity duration-500 ease-in-out
-      ${introDone ? `opacity-100 pointer-events-auto` : `opacity-0 pointer-events-none`}`}>
+    <nav className = {`top-0 flex-wrap flex justify-between items-center z-50 top-0 mx-100 transition-opacity duration-500 ease-in-out
+      ${showNav ? `opacity-100 pointer-events-auto` : `opacity-0 pointer-events-none`}`}>
     
       {/* left half*/}
       <ul className="flex items-center gap-5"

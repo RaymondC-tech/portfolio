@@ -55,3 +55,13 @@
     background-color: #888; /* Lighter gray when hovered */
   }
 
+  /* hide scrollbar from chrome, safari and opera */
+textarea.noscrollbar::-webkit-scrollbar {
+  display: none,
+}
+
+/* Hide scrollbar for IE, Edge, Firefox */
+textarea.no-scrollbar{
+  -ms-overflow-style: none; /* IE and Edge*/
+  scrollbar-width: none;  /* FireFox*/
+}
