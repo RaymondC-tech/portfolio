@@ -1,20 +1,31 @@
+'use client'
+
 import React from 'react'
 import Link from 'next/link'
 import { MdEmail } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
+import { useIntro } from '@/components'
+import { usePathname } from 'next/navigation'
 
 const Navbar = () => {
+
+  const { introDone } = useIntro();
+  const pathname = usePathname();
+
+  const showNav = pathname !== '/' || introDone
+  
   return (
-    <nav className = " flex-wrap flex justify-between items-center z-10 top-0 mx-100">
+    <nav className = {`top-0 flex-wrap flex justify-between items-center z-50 top-0 mx-100 transition-opacity duration-500 ease-in-out
+      ${showNav ? `opacity-100 pointer-events-auto` : `opacity-0 pointer-events-none`}`}>
     
       {/* left half*/}
       <ul className="flex items-center gap-5"
           aria-label="Main navigation"
       >
         <li>
-          <Link href="/" className="text-white text-lg hover:underline">
-            Raymond
+          <Link href="/" className="text-white text-lg hover:underline font-weight: 700">
+            Raymond Chan
           </Link>
         </li>
         <li>

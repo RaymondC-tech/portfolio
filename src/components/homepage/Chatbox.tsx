@@ -2,10 +2,16 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { FaArrowUp } from "react-icons/fa6";
-
+import { FaRegStar } from "react-icons/fa";
+import { useIntro } from '@/components'
 
 const Chatbox = () => {
-    const [messages, setMessages] = useState<{role: 'user' | 'ai', content: string, isTyping?: boolean }[]>([]); /* keeps list of chat messages, typsecript at the end */
+    const [messages, setMessages] = useState<{role: 'user' | 'ai', content: string, isTyping?: boolean }[]>([
+        {
+            role: 'ai',
+            content: "Ask me anything about my experience, projects and hobbies! Also, feel free to connect with me above!"
+        }
+    ]); /* keeps list of chat messages, typsecript at the end */
     const [input, setInput] = useState('');  //keeps track of what is in textbox
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -74,58 +80,83 @@ const Chatbox = () => {
         }
     }, [messages]);
 
-  return (
-    <div className="w-full max-w-5xl mx-auto mt-10 p-4 border border-[#202124] rounded-lg bg-[#202124] shadow z-10">
-        <div className="h-64 overflow-y-auto space-y-2 mb-4 p-2 h-100 custom-scrollbar">
-            {messages.map((m, i) => ( //m is message, i is index
-                <div key={i} className={`text-sm ${m.role === 'user' ? 'text-right' : 'text-left'}`}>
-                    {m.isTyping ? (
-                        //dot animation
-                        <div className="flex space-x-1">
-                            <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce [animation-delay:.1s]"></span>
-                            <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce [animation-delay:.2s]"></span>
-                            <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce [animation-delay:.3s]"></span>
-                        </div>
-                    ): (
-                    <span 
-                    className={`inline-block px-3 py-1 rounded ${m.role === 'user' ? 'bg-[#40414F] rounded-full ' : 'bg-[#202124]'}`}
-                    dangerouslySetInnerHTML={{ __html: m.content }}
-                    />
- 
-                    )}
-                </div>    
-            ))}
-            <div ref={messagesEndRef} />
-        </div>
-        <form onSubmit={handleSubmit} className="w-full  " >  
-            <div className="relative w-full  border border-[#565869] rounded-xl px-4 py-3 pr-12 bg-[#343541]">
-                <textarea 
-                    value={input} //keeps input synced with state
-                    onChange={(e) => { setInput(e.target.value)} } //updates state when you
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            handleSubmit(e)
-                        }
-                    }}
-                    rows={2}
-                    className="w-full resize-none overflow-hidden bg-transparent text-[#8E8EA0] focus:outline-none" 
-                    placeholder="Ask me anything :)"
-                    onInput={(e) => {
-                        e.currentTarget.style.height = 'auto';
-                        e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`
-                    }}
+    return (
+        <div className="w-full max-w-4xl mx-auto mt-10 p-4 rounded-2xl bg-black/50 backdrop-blur-lg border border-white/20 shadow-lg">
+          {/* Messages container */}
+          <div className="flex-1 h-[400px] overflow-y-auto space-y-2 mb-4 p-2 custom-scrollbar">
+            {messages.map((m, i) => (
+              <div
+                key={i}
+                className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                {/* Optionally animate message entry with Framer Motion if desired */}
+                <div
+                  className={`
+                    inline-block
+                    px-4 py-2
+                    rounded-2xl
+                    max-w-[70%]
+                    text-base leading-relaxed
+                    ${m.role === 'user'
+                      ? 'bg-gray-700/80 text-white'
+                      : 'bg-gray-800/80 text-white border-l-4 border-cyan-400/70'}
+                  `}
+                  // Keep dangerouslySetInnerHTML as before
+                  dangerouslySetInnerHTML={{ __html: m.content }}
                 />
-                <button 
-                    type="submit" 
-                    className="absolute right-3 bottom-3 bg-white text-black w-8 h-8 rounded-full flex items-center justify-center text-sm shadow hover:shadow-md"
-                > 
-                    <FaArrowUp />
-                </button> 
+              </div>
+            ))}
+            {/*
+              Typing indicator row: show three bouncing dots in accent color
+              when m.isTyping is true. We assume at most one typing indicator in messages.
+            */}
+            {messages.some(m => m.isTyping) && (
+              <div className="flex justify-start"> 
+                {/* If you want typing indicator aligned left for AI; adjust justify-end if you want on right */}
+                <div className="flex px-4 py-2 rounded-2xl bg-gray-800/80 max-w-[20%]">
+                  <div className="flex space-x-1">
+                    <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce [animation-delay:.1s]" />
+                    <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce [animation-delay:.2s]" />
+                    <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce [animation-delay:.3s]" />
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+      
+          {/* Input area */}
+          <form onSubmit={handleSubmit} className="w-full">
+            <div className="flex items-center bg-black/40 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2">
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }
+                }}
+                rows={1}
+                 className="flex-1 bg-transparent text-white placeholder-gray-400 resize-none focus:outline-none text-lg leading-tight no-scrollbar"
+                
+                placeholder="What’s on your mind?"
+                onInput={(e) => {
+                  e.currentTarget.style.height = 'auto';
+                  e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+                }}
+              />
+              <button
+                type="submit"
+                className="ml-2 bg-cyan-400 hover:bg-cyan-500 text-black w-8 h-8 flex items-center justify-center rounded-full shadow-md"
+              >
+                <FaArrowUp />
+              </button>
             </div>
-        </form> 
-    </div>
-    );
+          </form>
+        </div>
+      );
+      
 };
 
 export default Chatbox
