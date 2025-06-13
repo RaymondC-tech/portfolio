@@ -5,7 +5,7 @@ export { default as Chatbox } from './homepage/Chatbox';
 export { default as TypingIntro} from './homepage/TypingIntro'
 export { default as RocketIntro } from './intro/RocketIntro'
 export { default as ThreeSixtyCarousel } from './projects/ThreeSixtyCarousel'
-export { default as Experience } from './experience/Experience'
+export { default as ExperienceItem } from './experience/ExperienceItem'
 export { IntroProvider, useIntro } from './intro/IntroContext'
 export { default as SectionTitle} from './layout/SectionTitle'
 //export { default as Background1 } from './layout/Backrgound1'

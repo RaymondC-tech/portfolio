@@ -11,7 +11,7 @@ interface ExpereinceComponentProps {
 }
 
 
-export default function Experience({exp, index}: ExpereinceComponentProps) {
+export default function ExperienceItem({exp, index}: ExpereinceComponentProps) {
 
 
   const isLeft = index % 2 === 1

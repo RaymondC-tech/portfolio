@@ -1,5 +1,5 @@
 import { experienceData } from '@/data/experiences'
-import { Experience, SectionTitle } from '@/components'
+import { ExperienceItem, SectionTitle } from '@/components'
 
 
 export default function ExperiencePage() {
@@ -13,9 +13,9 @@ export default function ExperiencePage() {
       <div className="absolute left-1/2 top-65 h-full w-px bg-white transform -translate-x-1/2 z-5"/>
       <div className="mt-65">
         {experienceData.map((e) => (
-        <Experience key={e.id} exp={e} index={e.id}>
+        <ExperienceItem key={e.id} exp={e} index={e.id}>
 
-        </Experience>
+        </ExperienceItem>
       ))}
       </div>
       
