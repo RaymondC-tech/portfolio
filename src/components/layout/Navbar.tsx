@@ -1,70 +1,157 @@
 'use client'
-
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { MdEmail } from "react-icons/md";
-import { FaGithub } from "react-icons/fa";
-import { FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaBars, FaTimes } from "react-icons/fa";
 import { useIntro } from '@/components'
 import { usePathname } from 'next/navigation'
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
+  const { introDone } = useIntro()
+  const pathname = usePathname()
 
-  const { introDone } = useIntro();
-  const pathname = usePathname();
-
+  // Determine if we should show the nav (e.g., hide on home until introDone)
   const showNav = pathname !== '/' || introDone
-  
-  return (
-    <nav className = {`top-0 flex-wrap flex justify-between items-center z-50 top-0 mx-100 transition-opacity duration-500 ease-in-out
-      ${showNav ? `opacity-100 pointer-events-auto` : `opacity-0 pointer-events-none`}`}>
-    
-      {/* left half*/}
-      <ul className="flex items-center gap-5"
-          aria-label="Main navigation"
-      >
-        <li>
-          <Link href="/" className="text-white text-lg hover:underline font-weight: 700">
-            Raymond Chan
-          </Link>
-        </li>
-        <li>
-          <Link href="/" className="text-white hover:underline">
-            Home
-          </Link>
-        </li>
-          <Link href="/about" className="text-white hover:underline">
-            About
-          </Link>
-        <li>
-          <Link href="/experiences" className='text-white hover:underline'>
-            Experience
-          </Link>
-        </li>
-        
-        <li>
-          <Link href="/projects" className="text-white hover:underline">
-            Project
-          </Link>
-          
-        </li>
-      </ul>
 
-      {/* Right half*/}
-      <div className = "w-1/10 flex gap-5">
-        <a href="mailto:raymondch49@gmail.com">
-          <MdEmail className="w-6 h-6" />
-        </a>
-        <a href="https://github.com/RaymondC-tech" target="_blank" rel="noopenber nopreferrer">
-          <FaGithub className="w-6 h-6"/>
-        </a>
-        <a href="https://www.linkedin.com/in/rchan49/" target="_blank" rel="noopener nopreferrer">
-          <FaLinkedin className="w-6 h-6"/>
-        </a>
+  // Mobile menu state
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  // Helper to detect active link
+  const isActive = (href: string) => {
+    // exact match or startsWith logic as needed
+    return pathname === href
+  }
+
+  // Links array for easier mapping
+  const navLinks: { name: string; href: string }[] = [
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+    { name: 'Experience', href: '/experience' },
+    { name: 'Projects', href: '/projects' },
+  ]
+
+  return (
+    <nav
+      className={`
+        fixed top-0 left-0 w-full z-50
+        bg-black/70 backdrop-blur-sm
+        transition-opacity duration-500 ease-in-out
+        ${showNav ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+      `}
+    >
+      {/* Container: max width, centered */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">   {/* All cuase of the justify-between that pushes first element ot left and right element all the way to right */}
+          {/* Left: Brand + desktop links */}
+          <div className="flex items-center">
+            {/* Brand */}
+            <Link href="/" className="text-white text-xl font-bold whitespace-nowrap">
+              Raymond Chan
+            </Link>
+
+            {/* Desktop menu: hidden on small */}
+            <ul className="hidden sm:flex sm:ml-8 sm:space-x-6 whitespace-nowrap"> {/* space-x-6 adds left margin to every element after the first*/}
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={`
+                      text-white hover:underline
+                      ${isActive(link.href) ? 'underline text-cyan-400' : ''}
+                    `}
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Right: social icons or mobile menu button */}
+          <div className="flex items-center">
+            {/* Desktop icons */}
+            <div className="hidden sm:flex sm:space-x-4">
+              <a href="mailto:raymondch49@gmail.com" aria-label="Email">
+                <MdEmail className="w-6 h-6 text-white hover:text-cyan-400" />
+              </a>
+              <a
+                href="https://github.com/RaymondC-tech"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+              >
+                <FaGithub className="w-6 h-6 text-white hover:text-cyan-400" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/rchan49/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedin className="w-6 h-6 text-white hover:text-cyan-400" />
+              </a>
+            </div>
+
+            {/* Mobile menu button: shown on small screens */}
+            <button
+              className="sm:hidden inline-flex items-center justify-center p-2 text-white hover:text-cyan-400"
+              onClick={() => setMobileOpen((o) => !o)}
+              aria-label="Toggle navigation menu"
+            >
+              {mobileOpen ? <FaTimes className="w-6 h-6" /> : <FaBars className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/*Mobile dropdown menuy if open */}
+      { mobileOpen && (
+        <div className="sm:hidden bg-black/80 backdrop-blur-sm">
+          <ul className='px-4 pt-2 pb-4 space-y-2'>
+            { navLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={`
+                    block text-white py-1
+                    ${isActive(link.href) ? 'underline text-cyan-400' : 'hover: underline'}
+                    `}
+                  onClick={() => setMobileOpen(false)} //close it
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+            <li className="pt-2 border-t border-gray-700">
+              <div className="flex space-x-4 mt-2">
+                <a href="mailto:raymondch49@gmail.com" aria-label="Email">
+                  <MdEmail className="w-6 h-6 text-white hover:text-cyan-400" />
+                </a>
+                <a
+                  href="https://github.com/RaymondC-tech"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                >
+                  <FaGithub className="w-6 h-6 text-white hover:text-cyan-400" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/rchan49/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                >
+                  <FaLinkedin className="w-6 h-6 text-white hover:text-cyan-400" />
+                </a>
+              </div>
+            </li>
+          </ul>
+          <div>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }
 
 export default Navbar
-

@@ -30,7 +30,7 @@ export default function ExperienceItem({exp, index}: ExpereinceComponentProps) {
       {/*left collumn */}
       {isLeft ? (
         <motion.div {...slideProps} className='flex justify-center pr-4'>
-          <div className="relative border border-white border-5 rounded-3xl px-[2vw] py-[2vh] w-1/2 transform transition duration-300 ease-in-out hover:scale-105 hover:bg-gray-700">
+          <div className="relative border-white border-5 rounded-3xl px-[2vw] py-[2vh] w-1/2 transform transition duration-300 ease-in-out hover:scale-105 bg-black/50 backdrop-blur-sm ">
 
             {/*arrow */}
             <div className="absolute top-1/2 right-0 transform translate-x-8 -translate-y-1/2">
@@ -70,7 +70,7 @@ export default function ExperienceItem({exp, index}: ExpereinceComponentProps) {
       viewport={{once: true, amount: 0.5}}
       transition={{duration: 0.6, delay: 0.2}}
       
-      className=" relative flex justify-center items-center z-20 border rounded-full border-4">
+      className=" relative flex justify-center items-center z-20 rounded-full border-4">
       <Image
           src={exp.imageSrc}
           alt={exp.title}
@@ -78,13 +78,13 @@ export default function ExperienceItem({exp, index}: ExpereinceComponentProps) {
           height={130}
           className=" rounded-full"
         />
-          <span className={`whitespace-nowrap flex absolute top-1/2 transform -translate-y-1/2 text-lg text-white 
+          <span className={`whitespace-nowrap flex absolute top-1/2 transform -translate-y-1/2 text-3xl text-white font-bold
             ${isLeft ? 'translate-x-100' : '-translate-x-100'}`}> {exp.date}</span>
       </motion.div>
       {/*right collumn */}
       <div className="flex justify-center pl-4">
         {!isLeft && (
-          <motion.div {...slideProps} className="relative border border-white border-5 rounded-3xl px-[2vw] py-[2vh] w-1/2 transform transition duration-300 ease-in-out hover:scale-105 hover:bg-gray-700">
+          <motion.div {...slideProps} className="relative border-5 border-white rounded-3xl px-[2vw] py-[2vh] w-1/2 transform transition duration-300 ease-in-out hover:scale-105 bg-black/50 backdrop-blur-sm">
             {/* arrow */}
             <div className="absolute top-1/2 left-0 transform -translate-x-8 -translate-y-1/2">
               <MdArrowLeft className="text-white text-5xl"/>
