@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Slide } from '@/types/Slide';
 import Image from 'next/image';
 import { FaGithub } from "react-icons/fa";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 
 interface ThreeSixtyCarouselProps {
   slides: Slide[];
@@ -17,14 +19,22 @@ export default function ProjectCarousel({
   slides,
   width = 600,
   height = 300,
-  radius = 1000,
-  autoRotateInterval = 5000,
+  radius = 600,
+  autoRotateInterval = 2000,
 }: ThreeSixtyCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rotatingRef = useRef<HTMLDivElement>(null);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [frontIndex, setFrontIndex] = useState(0);
+
+  const handleNext = () => {
+    setCurrentIndex((x) => (x + 1) % slideCount);
+  }
+
+  const handlePrev = () => {
+    setCurrentIndex((x) =>  (x - 1 + slideCount) % slideCount)
+  }
 
   // A ref to mirror frontIndex so our callback sees the up-to-date value
   const frontRef = useRef(frontIndex);
@@ -84,6 +94,7 @@ export default function ProjectCarousel({
     }, autoRotateInterval);
     return () => clearInterval(id);
   }, [currentIndex, slideCount, anglePerSlide, autoRotateInterval]);
+
 
 
   // Normalize into [0,360)
@@ -182,7 +193,7 @@ export default function ProjectCarousel({
     rotationRef.current = targetAngle;
 
     if (rotatingRef.current) {
-      rotatingRef.current.style.transition = 'transform 0.5s ease';
+      rotatingRef.current.style.transition = 'transform 0.8s ease';
       rotatingRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
       const onEnd = () => {
         if (rotatingRef.current) rotatingRef.current.style.transition = '';
@@ -225,12 +236,13 @@ export default function ProjectCarousel({
       style={{
         width: `${width}px`,
         height: `${height}px`,
-        perspective: '3000px',
+        perspective: '4000px',
       }}
       className="relative mx-auto overflow-visible cursor-grab mt-50"
       onMouseDown={handlePointerDown}
       onTouchStart={handlePointerDown}
     >
+      
       <div
         ref={rotatingRef}
         className="absolute inset-0"
@@ -240,24 +252,38 @@ export default function ProjectCarousel({
         }}
       >
         {slides.map((slide, idx) => {
-          const baseW = Math.round(width * 0.6)
-          const baseH = Math.round(height * 0.6)
-          //const scaleFactor = idx === frontIndex ? 3 : 0.8
-          //const thumbW = baseW * scaleFactor;
-          //const thumbH = baseH * scaleFactor
+          const scaleFactor = idx === frontIndex ? 1 : 1
+          const finalWidth = width * scaleFactor;
+          const finalHeight = height * scaleFactor
           const thisAngle = idx * anglePerSlide;
-          //const isFront = idx === frontIndex;
+          const isFront = idx === frontIndex;
           return (
             <div
               key={slide.id}
-              className="flex absolute inset-0 items-start justify-center"
+              className="flex flex-col absolute inset-0 items-start justify-center gap-4"
               style={{
                 transform: `rotateY(${thisAngle}deg) translateZ(${radius}px)`,
               }}
             >
-              <div className="relative rounded-lg overflow-visible
-                    transform transition-transform ease-in-out duration-1000 bg-[#05051e] flex-shrink-0 flex items-center justify-center "
-                  style={{ width: `${600}px`, height: `${300}px`}}
+              {/* {isFront && (
+                <div className="z-50">
+                  <div className="absolute left-10 z-2 h-full flex items-center" 
+                  onClick={handlePrev}
+                  onMouseDown={(e) => e.stopPropagation()}>
+                    <IoIosArrowBack/>
+                  </div>
+                  <div>
+                    <IoIosArrowForward className="absolute right-10 z-2 h-full flex items-center" 
+                    onClick={handleNext}
+                    onMouseDown={(e) => e.stopPropagation()}/>
+                  </div>
+                </div>
+              )} */}
+              
+              <div className="relative md:w-80 md:h-48 bg-gray-800 p-4 rounded-2xl shadow-2xl overflow-hidden
+                    transform transition-transform ease-in-out duration-500 flex-shrink-0 flex items-center justify-center "
+                 
+                  style={{ width: `${finalWidth}px`, height: `${finalHeight}px`}}
                   >
                 <Image
                   src={slide.imgSrc}
@@ -266,31 +292,33 @@ export default function ProjectCarousel({
                   style={{ objectFit: 'contain' }}
                   quality={100}
                   //priority={isFront}
-                  className="z-30 relative filter brightness-50"
+                  className={`z-10 absolute filter ${isFront ? '' : 'brightness-50'}`}
                 />
-                <div className="flex flex-col items-center justify-center relative z-30 px-30 top-1/2 -translate-y-25">
-                  <h3>
-                    {slide.title}
-                  </h3>
-                  <h5 className="text-xs text-center">
-                    {slide.shortDescription}
-                  </h5>
-                  <p className="text-2xs">
-                    {slide.languagesUsed}
-                  </p>
-                  <a href={slide.link} target="_blank" rel="noopenber nopreferrer">
-                    <FaGithub className="w-4 h-4"/>
-                  </a>
-                </div>
+                
               </div>
-              {/* {isFront && (
-                  <div className="mt-5 text-center">
-                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded-md text-sm">
-                      {slide.title}
-                    </span>
-                  </div>
-                )} */}
-            </div>
+             {isFront && (
+                <div className="w-[600px] text-center space-y-2">
+                <h3 className="text-2xl md:text-3xl font-bold text-white">
+                  {slides[currentIndex].title}
+                </h3>
+                <p className="text-base text-gray-300">
+                  {slides[currentIndex].shortDescription}
+                </p>
+                <div className="text-sm uppercase tracking-wide text-indigo-400">
+                  {slides[currentIndex].languagesUsed}
+                </div>
+                <a
+                  href={slides[currentIndex].link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex mt-3 text-white bg-gray-700 p-2 rounded-full hover:bg-gray-600"
+                >
+                  <FaGithub className="w-5 h-5" />
+                </a>
+              </div>
+             )}
+              
+              </div>
           );
         })}
       </div>
