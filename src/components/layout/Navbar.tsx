@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
   const navLinks: { name: string; href: string }[] = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
-    { name: 'Experience', href: '/experience' },
+    { name: 'Experience', href: '/experiences' },
     { name: 'Projects', href: '/projects' },
   ]
 
@@ -40,7 +40,7 @@ const Navbar: React.FC = () => {
       `}
     >
       {/* Container: max width, centered */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">   {/* All cuase of the justify-between that pushes first element ot left and right element all the way to right */}
           {/* Left: Brand + desktop links */}
           <div className="flex items-center">
