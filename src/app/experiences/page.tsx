@@ -8,16 +8,21 @@ export default function ExperiencePage() {
     <main className="min-h-screen max-w-8xl mx-auto px-4 pt-16">
       <SectionTitle text = "Experience" underlineWidthClass= "w-32"/>
       <div className="flex justify-center mt-20 text-5xl">
-      Work Experience Timeline
-      </div>
-      <div className="absolute left-1/2 top-65 h-full w-px bg-white transform -translate-x-1/2 z-5"/>
-      <div className="mt-65">
-        {experienceData.map((e) => (
-        <ExperienceItem key={e.id} exp={e} index={e.id}>
 
-        </ExperienceItem>
-      ))}
       </div>
+
+      
+      <div className="relative">
+        <div className="absolute left-1/2 h-screen w-px bg-white transform -translate-x-1/2 z-5"/>
+        <div className="mt-10">
+          {experienceData.map((e) => (
+          <ExperienceItem key={e.id} exp={e} index={e.id}>
+
+          </ExperienceItem>
+        ))}
+        </div>
+      </div>
+      
       
     </main>
   )

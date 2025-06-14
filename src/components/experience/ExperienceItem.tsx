@@ -26,7 +26,8 @@ export default function ExperienceItem({exp, index}: ExpereinceComponentProps) {
 
   return (
     //3 collumn approach
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center w-full mt-[5vh]">
+    <div className=" relative grid grid-cols-[1fr_auto_1fr] items-center w-full mt-[5vh]">
+      
       {/*left collumn */}
       {isLeft ? (
         <motion.div {...slideProps} className='flex justify-center pr-4'>
