@@ -43,7 +43,7 @@ export default function SectionTitle({ text, underlineWidthClass = "w-24" }: Sec
           alt={exp.title}
           width={130}
           height={130}
-          className=" rounded-full"
+          className=" rounded-full opacity-0"
         />
 
       </div>

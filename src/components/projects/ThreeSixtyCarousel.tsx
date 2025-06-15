@@ -20,7 +20,7 @@ export default function ProjectCarousel({
   width = 600,
   height = 300,
   radius = 600,
-  autoRotateInterval = 2000,
+  autoRotateInterval = 5000,
 }: ThreeSixtyCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rotatingRef = useRef<HTMLDivElement>(null);
@@ -280,7 +280,7 @@ export default function ProjectCarousel({
                 </div>
               )} */}
               
-              <div className="relative md:w-80 md:h-48 bg-gray-800 p-4 rounded-2xl shadow-2xl overflow-hidden
+              <div className="relative md:w-80 md:h-48 bg-black/80 backdrop-blur-sm p-4 rounded-2xl shadow-2xl overflow-hidden
                     transform transition-transform ease-in-out duration-500 flex-shrink-0 flex items-center justify-center "
                  
                   style={{ width: `${finalWidth}px`, height: `${finalHeight}px`}}
