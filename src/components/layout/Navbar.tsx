@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
     <nav
       className={`
         fixed top-0 left-0 w-full z-50
-        bg-black/70 backdrop-blur-sm
+        bg-black/90 backdrop-blur-sm
         transition-opacity duration-500 ease-in-out
         ${showNav ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
       `}

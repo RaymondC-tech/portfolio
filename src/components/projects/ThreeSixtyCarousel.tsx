@@ -78,7 +78,7 @@ export default function ProjectCarousel({
 
       //3 apply to dom
       if (rotatingRef.current){
-        rotatingRef.current.style.transition = 'transform 0.3s ease';
+        rotatingRef.current.style.transition = 'transform 1s ease';
         rotatingRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
 
         const onEnd = () => {
@@ -193,7 +193,7 @@ export default function ProjectCarousel({
     rotationRef.current = targetAngle;
 
     if (rotatingRef.current) {
-      rotatingRef.current.style.transition = 'transform 0.8s ease';
+      rotatingRef.current.style.transition = 'transform 1s ease';
       rotatingRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
       const onEnd = () => {
         if (rotatingRef.current) rotatingRef.current.style.transition = '';
