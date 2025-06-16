@@ -2,7 +2,7 @@
 
 import type { Metadata } from "next";
 import "./globals.css";
-import {Starfield, Navbar} from '@/components'
+import {Starfield, Navbar, MouseGlow} from '@/components'
 import { LoadingProvider, useLoading } from './LoadingContext'
 import { IntroProvider } from '@/components'
 
@@ -25,6 +25,8 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
           <Navbar/>
           <Starfield/>
           <main>{children}</main>
+          {/*<MouseGlow/> */}
+
         </IntroProvider>
       </body>
     </html>
