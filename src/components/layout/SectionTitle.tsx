@@ -17,7 +17,7 @@ export default function SectionTitle({ text, underlineWidthClass = "w-24" }: Sec
       {/*Collumn 1 */}
       <div className="flex justify-center overflow-visible pr-4">
         <div className="relative w-1/2 ">
-          <div className="inline-flex items-center text-6xl font-bold overflow-visible">
+          <div className="inline-flex items-center text-6xl font-bold overflow-visible whitespace-nowrap">
             <span className="mr-2">/</span>
             <span>{text}</span>
 
