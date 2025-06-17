@@ -23,7 +23,7 @@ export default function ExperiencePage() {
       
       <div className="relative">
         <div className="absolute left-1/2 h-screen w-px bg-white transform -translate-x-1/2 z-5"/>
-        <div className="mt-10 w-full max-w-[2000px] mx-auto px-8">
+        <div className="mt-10 w-full max-w-[2200px] mx-auto px-8">
           {experienceData.map((e) => (
           <ExperienceItem key={e.id} exp={e} index={e.id}>
 

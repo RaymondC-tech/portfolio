@@ -25,7 +25,7 @@ const Chatbox = () => {
         setMessages(newMessages); //adds users message to the list
 
         //and typing placeholder
-        setMessages((prev) => [...prev, {role: 'ai', content: "...", isTyping: true}])
+        setMessages((prev) => [...prev, {role: 'ai', content: "", isTyping: true}])
         setInput('') //clears input box
         
         
@@ -85,7 +85,8 @@ const Chatbox = () => {
           {/* Messages container */}
           <div className="flex-1 h-[400px] overflow-y-auto space-y-2 mb-4 p-2 custom-scrollbar">
             {messages.map((m, i) => (
-              <div
+              !m.isTyping && m.content.trim() !== "" && (
+                <div
                 key={i}
                 className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
@@ -96,7 +97,8 @@ const Chatbox = () => {
                     px-4 py-2
                     rounded-2xl
                     max-w-[70%]
-                    text-base leading-relaxed
+                    leading-relaxed
+                    text-lg
                     ${m.role === 'user'
                       ? 'bg-gray-700/80 text-white'
                       : 'bg-gray-800/80 text-white border-l-4 border-cyan-400/70'}
@@ -105,6 +107,8 @@ const Chatbox = () => {
                   dangerouslySetInnerHTML={{ __html: m.content }}
                 />
               </div>
+              )
+              
             ))}
             {/*
               Typing indicator row: show three bouncing dots in accent color

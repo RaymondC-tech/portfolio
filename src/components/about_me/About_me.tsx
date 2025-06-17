@@ -8,7 +8,7 @@ const technoloiges = ["TypeScript", "Python", "Java", "Next.js", "Go", "C"]
 
 export default function About_me() {
   return (
-    <div className="w-full max-w-[1800px] mx-auto grid grid-cols-2 gap-12 px-8 mt-8 mb-8 items-center">
+    <div className="w-full max-w-[1800px] mx-auto grid grid-cols-2 gap-12 px-20 mt-8 mb-8 items-center">
 
     <div >
 
@@ -30,8 +30,8 @@ export default function About_me() {
         </ul>
         <p className="text-2xl mt-3">
           Beside coding 24/7, I an interested in reading articles about extraterrestrial 
-          phenomenas and playing a variety of 
-          enjoy playing sports 
+          phenomenas and enjoy playing a variety of 
+           sports 
         </p>
     </div>
 

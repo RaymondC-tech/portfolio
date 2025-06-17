@@ -40,11 +40,11 @@ export default function ExperienceItem({exp, index}: ExpereinceComponentProps) {
 
 
             {/*main bodyu and text */}
-              <h2 className="text-white text-4xl font-bold">
+              <h2 className="text-white text-5xl font-bold">
                   {exp.title}
               </h2>
 
-              <h5 className=" text-white mt-[1vh] text-xl">
+              <h5 className=" text-white mt-[1vh] text-3xl">
                 {exp.organization}
               </h5>
 
@@ -52,9 +52,9 @@ export default function ExperienceItem({exp, index}: ExpereinceComponentProps) {
                 {exp.description.map((e, idx) => (
                   <p
                   key={idx}
-                  className="text-white text-base"
+                  className="text-white text-xl"
                   >
-                    {`-  ${e}`}
+                    - {e}
                   </p>
                 ))}
               </div> 
@@ -93,19 +93,19 @@ export default function ExperienceItem({exp, index}: ExpereinceComponentProps) {
 
             {/* main boyd and text */}
 
-            <h2 className="text-white text-4xl font-bold">
+            <h2 className="text-white text-5xl font-bold">
               {exp.title}
             </h2>
         
-            <h5 className=" text-white mt-[1vh] text-xl">
+            <h5 className=" text-white mt-[1vh] text-3xl">
               {exp.organization}
             </h5>
             <div className="mt-[1vh] space-y-[0.5vh]">
               {exp.description.map((e, idx) => (
-                <p className=" text-white text-base"
+                <p className=" text-white text-xl"
                   key={idx}
                 >
-               {`- ${e}`}
+                - {e}
              </p>
               ))}
             </div>

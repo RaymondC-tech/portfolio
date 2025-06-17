@@ -298,7 +298,7 @@ export default function ProjectCarousel({
               </div>
              {isFront && (
                 <div className="w-[600px] text-center space-y-2">
-                <h3 className="text-2xl md:text-3xl font-bold text-white">
+                <h3 className="text-2xl md:text-3xl font-bold text-sky-400">
                   {slides[currentIndex].title}
                 </h3>
                 <p className="text-base text-gray-300">
