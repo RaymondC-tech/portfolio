@@ -39,7 +39,7 @@ export default function About_me() {
     <div className="flex justify-center h-full">
       <div className="relative w-full h-full max-w-[300px]">
       <Image
-          src={"/me.JPG"}
+          src={"/me.jpg"}
           alt={exp.title}
           fill
           className=" rounded-4xl object-contain border-4 border-white bg-black/50 backdrop-blur-sm"
