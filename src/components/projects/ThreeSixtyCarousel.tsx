@@ -22,11 +22,40 @@ export default function ProjectCarousel({
   radius = 600,
   autoRotateInterval = 5000,
 }: ThreeSixtyCarouselProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const rotatingRef = useRef<HTMLDivElement>(null);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [frontIndex, setFrontIndex] = useState(0);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rotatingRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const currentIndexRef = useRef(currentIndex);
+
+  useEffect(() => {
+    currentIndexRef.current = currentIndex;
+  }, [currentIndex])
+
+  //handle logic to stop the rotation after switching tabs
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+
+        // tab is hidden, stop rotation
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current)
+          intervalRef.current = null;
+        }
+      } else if (document.visibilityState === 'visible') {
+        //tab is visible again, resume rotation
+        startAutoRotate();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    };
+  }, []);
 
   const handleNext = () => {
     setCurrentIndex((x) => (x + 1) % slideCount);
@@ -50,6 +79,31 @@ export default function ProjectCarousel({
   const anglePerSlide = 360 / slideCount;
   const halfSlice = anglePerSlide / 2;
 
+  const startAutoRotate = () => {
+    if ( intervalRef.current ) clearInterval(intervalRef.current)
+    if ( draggingRef.current ) return;
+  
+    intervalRef.current =  setInterval(() => {
+      if (draggingRef.current) return;
+  
+      const nextIndex = (currentIndexRef.current - 1 + slideCount) % slideCount;
+      const newAngle = rotationRef.current + anglePerSlide;
+      rotationRef.current = newAngle;
+  
+      if (rotatingRef.current) {
+        rotatingRef.current.style.transition = 'transform 1s ease';
+        rotatingRef.current.style.transform = `rotateY(${rotationRef.current}deg)`
+        rotatingRef.current.addEventListener('transitionend', () => {
+          if (rotatingRef.current) rotatingRef.current.style.transition = '';
+        }, { once: true })
+      }
+  
+      setCurrentIndex(nextIndex);
+      setFrontIndex(nextIndex)
+  
+    }, autoRotateInterval)
+  };
+
   // On mount, ensure the inner div starts at 0°
   useEffect(() => {
     if (rotatingRef.current) {
@@ -65,37 +119,15 @@ export default function ProjectCarousel({
   // Auto-rotate timer
   useEffect(() => {
 
-    if (draggingRef.current) return;
+   startAutoRotate();
 
-    const id = setInterval(() => {
-
-      //1 compute next index
-      const nextIndex = (currentIndex - 1 + slideCount) % slideCount;
-
-      //2 apply new angle
-      const newAngle = rotationRef.current + anglePerSlide;
-      rotationRef.current = newAngle;
-
-      //3 apply to dom
-      if (rotatingRef.current){
-        rotatingRef.current.style.transition = 'transform 1s ease';
-        rotatingRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
-
-        const onEnd = () => {
-          if (rotatingRef.current) rotatingRef.current.style.transition = '';
-          rotatingRef.current?.removeEventListener('transitionend', onEnd);
-        };
-        rotatingRef.current.addEventListener('transitionend', onEnd);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
-      //4 bump currentIndex and frontIndex togethere;
-      setCurrentIndex(nextIndex);
-      setFrontIndex(nextIndex);
-
-    }, autoRotateInterval);
-    return () => clearInterval(id);
+      
+    }
   }, [currentIndex, slideCount, anglePerSlide, autoRotateInterval]);
-
-
 
   // Normalize into [0,360)
   const normalizeDeg = (deg: number) => {
@@ -203,12 +235,18 @@ export default function ProjectCarousel({
     }
 
     setCurrentIndex(nearestIndex);
+    startAutoRotate()
+    
   }, [anglePerSlide, slideCount, handlePointerMove]);
 
   // Handle pointer down (start drag)
   const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     draggingRef.current = true;
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
     
     document.body.style.cursor = 'grabbing'
 
@@ -299,16 +337,16 @@ export default function ProjectCarousel({
              {isFront && (
                 <div className="w-[600px] text-center space-y-2">
                 <h3 className="text-2xl md:text-3xl font-bold text-sky-400">
-                  {slides[currentIndex].title}
+                  {slides[frontIndex].title}
                 </h3>
                 <p className="text-base text-gray-300">
-                  {slides[currentIndex].shortDescription}
+                  {slides[frontIndex].shortDescription}
                 </p>
                 <div className="text-sm uppercase tracking-wide text-indigo-400">
-                  {slides[currentIndex].languagesUsed}
+                  {slides[frontIndex].languagesUsed}
                 </div>
                 <a
-                  href={slides[currentIndex].link}
+                  href={slides[frontIndex].link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex mt-3 text-white bg-gray-700 p-2 rounded-full hover:bg-gray-600"
