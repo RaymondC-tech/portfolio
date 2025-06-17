@@ -17,7 +17,6 @@ const TypingIntro: React.FC<TypingIntroProps> = ({ onComplete }) => {
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] =  useState(0);
     const [typedLines, setTypedLines] = useState(["",""])
-    const [showButton, setShowButton] = useState(false);
     const [doneSignaled, setDoneSignaled] = useState(false);
     const { introDone } = useIntro();
 

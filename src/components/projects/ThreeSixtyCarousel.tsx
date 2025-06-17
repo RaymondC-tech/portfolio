@@ -4,8 +4,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Slide } from '@/types/Slide';
 import Image from 'next/image';
 import { FaGithub } from "react-icons/fa";
-import { IoIosArrowBack } from "react-icons/io";
-import { IoIosArrowForward } from "react-icons/io";
 
 interface ThreeSixtyCarouselProps {
   slides: Slide[];
