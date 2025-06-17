@@ -41,6 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 #personal information
-userBio.ts
-promptClarification.ts
-updatedUserBio.ts
+#userBio.ts
+#promptClarification.ts
+#updatedUserBio.ts
