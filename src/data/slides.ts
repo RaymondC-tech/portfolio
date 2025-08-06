@@ -40,11 +40,11 @@ export const slidesData: Slide[] = [
     },
     {
         id: 5,
-        title: "Simply",
-        imgSrc: "/project_image/simply.png",
-        link: "https://github.com/RaymondC-tech/Simply",
-        shortDescription: "A tech marketplace where freelance developers can connect to small businesses",
-        languagesUsed: "REACT MONGODB FASTAPI"
+        title: "StuddyBuddy",
+        imgSrc: "/project_image/studdybuddy.jpg",
+        link: "https://github.com/RaymondC-tech/study-budy",
+        shortDescription: "AI-powered study companion that chats with you, generates quizzes and flashcards, tracks posture and hydration, and helps you stay focused like a real friend",
+        languagesUsed: "NEXTJS, FIREBASE, OPENCV"
     }
 ]
 
