@@ -31,11 +31,11 @@ export const slidesData: Slide[] = [
     },
     {
         id: 4,
-        title: "Caffio",
-        imgSrc: "/project_image/caffio.png",
-        link: "https://github.com/RaymondC-tech/Caffio",
-        shortDescription: "Coffee tracking app for consumers be more aware about their coffee intake",
-        languagesUsed: "REACT, FIREBASE, POSTGRESSQL"
+        title: "ShibaCoder",
+        imgSrc: "/project_image/shibacoder.png",
+        link: "https://github.com/RaymondC-tech/ShibaCoder",
+        shortDescription: "real-time 1v1 competitive coding game that transforms traditional programming practice into an interactive, gamified battle experience with live spectators, attacks, rankings, and a retro aesthetic.",
+        languagesUsed: "NEXT, SUPABASE, WEBSOCKETS"
 
     },
     {
