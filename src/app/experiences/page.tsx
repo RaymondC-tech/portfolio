@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 export default function ExperiencePage() {
   const imagesrc = ['/recesshacks_logo.jpg','/mathnasium_logo.jpg' ]
   return (
-    <main className="min-h-screen max-w-8xl mx-auto px-4 pt-16 overflow-auto custom-scrollbar">
+    <main className="min-h-screen max-w-8xl mx-auto px-4 pt-16 overflow-y-auto">
       <motion.div
         initial={{opacity:0}}
         whileInView={{ opacity: 1}}
