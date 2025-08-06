@@ -8,29 +8,24 @@ import { motion } from 'framer-motion'
 export default function ExperiencePage() {
   const imagesrc = ['/recesshacks_logo.jpg','/mathnasium_logo.jpg' ]
   return (
-    <main className="min-h-screen max-w-8xl mx-auto px-4 pt-16 overflow-y-auto">
+    <main className="w-full max-w-8xl mx-auto px-4 pt-16 pb-16">
       <motion.div
         initial={{opacity:0}}
         whileInView={{ opacity: 1}}
         viewport={{ once: true, amount: 0.5}}
         transition={{duration: 0.6, delay: 0.2}}
       >
-      <SectionTitle text = "Experience" underlineWidthClass= "w-32"/>
-      <div className="flex justify-center mt-20 text-5xl">
-
-      </div>
-
-      
-      <div className="relative">
-        <div className="absolute left-1/2 h-screen w-px bg-white transform -translate-x-1/2 z-5"/>
-        <div className="mt-10 w-full max-w-[2200px] mx-auto px-8">
-          {experienceData.map((e) => (
-          <ExperienceItem key={e.id} exp={e} index={e.id}>
-
-          </ExperienceItem>
-        ))}
+        <SectionTitle text = "Experience" underlineWidthClass= "w-32"/>
+        
+        <div className="relative mt-20">
+          <div className="absolute left-1/2 h-full w-px bg-white transform -translate-x-1/2 z-5"/>
+          <div className="w-full max-w-[2200px] mx-auto px-8">
+            {experienceData.map((e) => (
+              <ExperienceItem key={e.id} exp={e} index={e.id}>
+              </ExperienceItem>
+            ))}
+          </div>
         </div>
-      </div>
       </motion.div>
     </main>
   )
