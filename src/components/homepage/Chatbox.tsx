@@ -39,7 +39,7 @@ const Chatbox = () => {
             });
 
             const data =  await res.json(); //reads data from server and parse into javascript objeect
-            const aiMessage = data.response;
+            const aiMessage = data.response || "Sorry, I couldn't process that request.";
 
             typeWriter(aiMessage, (chunk) => {
                 setMessages((prev) => [
@@ -63,6 +63,12 @@ const Chatbox = () => {
     };
 
     const typeWriter = (text: string, callback: (chunk: string) => void, delay=20) => {
+        // Handle cases where text might be undefined or null
+        if (!text || typeof text !== 'string') {
+            callback("Sorry, I couldn't process that request.");
+            return;
+        }
+        
         let index = 0
         const type = () => {
             if (index <= text.length) {
